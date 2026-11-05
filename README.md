@@ -2,7 +2,17 @@
 
 Polar's fork of [sisyphuslabs/dori-superagent](https://github.com/sisyphuslabs/dori-superagent): not a new superagent, but a record of how one working agent harness uses Dori.
 
-The upstream README is kept unchanged as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (Korean, Simplified Chinese, Japanese) are upstream's own. The code in this repository is upstream's code at 766630f. This page and the picture below are the only things we added.
+The upstream README is kept unchanged as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (Korean, Simplified Chinese, Japanese) are upstream's own. The code in this repository is upstream's code at 766630f. This page, [SETUP.md](SETUP.md) and the picture below are the only things we added.
+
+## Set up your own Polar
+
+Paste this one line into an OmO session:
+
+```text
+Read https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/SETUP.md and set yourself up exactly as it says, step by step, asking me only where it tells you to.
+```
+
+[SETUP.md](SETUP.md) walks the agent through it: install agent-messenger and ask which platform to use, log in, create the bot, name itself and pick an avatar, greet you, take every request through a monitor, connect calendars and accounts through zele, onboard itself, and keep the session alive across reboots.
 
 ## What Polar is
 
@@ -50,7 +60,7 @@ These parts are ours and run around the Dori loop.
 
 ## Keeping up with upstream
 
-- Synced to upstream `main` at 766630f on 2026-11-05. Apart from this README, the picture and the renamed upstream README, `main` is upstream's tree.
+- Synced to upstream `main` at 766630f on 2026-11-05. Apart from this README, SETUP.md, the picture and the renamed upstream README, `main` is upstream's tree.
 - Since 2026-11-05 we read new upstream commits every evening and compare the useful ones with the tables above.
 - We have not contributed anything to the upstream repository yet.
 
