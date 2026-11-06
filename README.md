@@ -12,19 +12,21 @@ Paste this one line into an OmO session:
 Read https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/SETUP.md and set yourself up exactly as it says, step by step, asking me only where it tells you to.
 ```
 
-[SETUP.md](SETUP.md) walks the agent through it: install agent-messenger and ask which platform to use, log in, create the bot, name itself and pick an avatar, greet you, take every request through a monitor, connect calendars and accounts through zele, onboard itself, and keep the session alive across reboots.
+[SETUP.md](SETUP.md) walks the agent through it: ask who you are (name, how to address you, chat language, time zone, GitHub account) and keep that in a local profile, explain what Polar is, what it can take on and how it brings in new technology from GitHub, then install agent-messenger and ask which platform to use, log in, create the bot, name itself and pick an avatar, greet you, take every request through a monitor, connect calendars and accounts through zele, onboard itself, and keep the session alive across reboots.
 
 Model roles, per-model context compaction, how omo builds each model's prompt, and the token-saving rules: [docs/polar/models-and-context.md](docs/polar/models-and-context.md).
 
 ## What Polar is
 
-Polar is the owner's ([ashmoonori-afk](https://github.com/ashmoonori-afk)) orchestrator agent. One lead session on a Mac talks to the owner in chat and hands work to worker sessions on three machines, the Mac and two Windows PCs running WSL, reached over SSH. It runs on [omo](https://github.com/code-yeongyu/oh-my-openagent). Polar's own code lives in a private workspace; this page describes it and does not ship it.
+Polar is {user}'s orchestrator agent, where {user} is whoever sets it up: one long-running lead session talks to {user} in a messenger and hands work to worker sessions on the same machine or on other machines reached over SSH. It runs on [omo](https://github.com/code-yeongyu/oh-my-openagent). SETUP.md asks {user} for their name, language, time zone and GitHub account and keeps them in a local profile, so nothing about a particular person comes from this repository.
+
+The tables below describe the reference setup this fork was written from: one lead session on a Mac, with worker sessions on the Mac and two Windows PCs running WSL. That setup's code lives in a private workspace; this page describes it and does not ship it.
 
 ## Where each piece acts
 
-![Polar's harness: the owner in chat, the Polar lead session on the Mac, worker sessions on the Mac and two WSL PCs, and the checks placed on the steps they guard](docs/polar/polar-harness.png)
+![Polar's harness: {user} in chat, the Polar lead session on the Mac, worker sessions on the Mac and two WSL PCs, and the checks placed on the steps they guard](docs/polar/polar-harness.png)
 
-Each check sits on the step it guards. The night gate sits on posts to the owner. Instruction receipts sit on the way out to workers. Four checks run before a lane closes. The heavy slot sits on the 8 GB Mac. Blue lines are the work path; the dashed line is the work watch.
+Each check sits on the step it guards. The night gate sits on posts to {user}. Instruction receipts sit on the way out to workers. Four checks run before a lane closes. The heavy slot sits on the 8 GB Mac. Blue lines are the work path; the dashed line is the work watch.
 
 ## Taken from Dori, and how we changed it
 
@@ -32,7 +34,7 @@ These parts came from Dori (MIT, Copyright (c) 2026 YeonGyu Kim). Each port keep
 
 | Piece | Where it came from | What it does in Polar | What we changed, and why |
 |---|---|---|---|
-| Dori mode bundle (items 1-5) | `omo-dori-mode-experimental` at 742f09d, installed 2026-10-07 next to the existing agent; nothing upstream was overwritten | An installable CLI and config with tests; per-lane JSON state with history and live sync; a resource-aware launch queue with heavy slots; one send/edit path across chat platforms | We kept our own pieces where we already had them: the owner's Korean voice instead of Dori's style, status relays from remote machines over SSH, our scheduler and watchdogs, and tmux as the backend, with herdr only as a view. |
+| Dori mode bundle (items 1-5) | `omo-dori-mode-experimental` at 742f09d, installed 2026-10-07 next to the existing agent; nothing upstream was overwritten | An installable CLI and config with tests; per-lane JSON state with history and live sync; a resource-aware launch queue with heavy slots; one send/edit path across chat platforms | We kept our own pieces where we already had them: a Korean chat voice instead of Dori's style, status relays from remote machines over SSH, our scheduler and watchdogs, and tmux as the backend, with herdr only as a view. |
 | Objection window and lane close | Same bundle | A lane closes only after a 300-second objection window and a live check of its Done condition. It refuses to close with dirty or unpushed work. | Every close path is guarded, because upstream's direct close skipped the objection window. Untracked files and the lane's own working directory now count as dirty. |
 | Resource checks in the launch queue | Same bundle | Decides whether a machine has room for another session | Memory on Linux and WSL is sampled for real, and a missing measurement fails closed. On WSL we check the Windows disk behind the guest, because the guest disk is thin-provisioned: it reported about 951 GiB free while Windows had about 41 GiB. |
 | Done signals | dori-mode `scripts/src/signals.ts`, ported 2026-11-02 | Every task carries a Done condition written at launch in the Dori grammar (merged, closed, published, command, file, url), and a watcher re-reads it live. | Our earlier checker parsed evidence out of prose and rejected 818 of 834 claims. Changes: paths and working directories must be absolute; command, file and url checks run on the task's own machine; each option may appear once; a line holds at most one command. |
@@ -57,8 +59,8 @@ These parts are ours and run around the Dori loop.
 | Delivery into a running session | Messages go through the session's own control socket as a real user turn. When the session is idle the message starts a turn; when it is busy the message queues behind the running turn. A terminal fallback exists. Held sessions are refused rather than typed into. |
 | Work watch | Every 10 minutes in the daytime it looks for trouble: a worker's tmux session that disappeared; a session that is paused or gets no model reply; a PR that is green and mergeable but untouched for 3 hours, too big, or too old; a remote session that needs a model switch. |
 | Close-finished | Finished worker sessions are closed automatically, but never while an instruction is unread or its state is unknown. |
-| Night gate | Routine posts to the owner between 22:00 and 07:30 KST wait in a queue for the morning. Only a direct reply or a real outage goes through. |
-| Promise ledger | Every "I will do X at T" the agent says to the owner is recorded. At T it fires, and it keeps firing until it is closed with evidence. |
+| Night gate | Routine posts to {user} between 22:00 and 07:30 KST wait in a queue for the morning. Only a direct reply or a real outage goes through. |
+| Promise ledger | Every "I will do X at T" the agent says to {user} is recorded. At T it fires, and it keeps firing until it is closed with evidence. |
 
 ## Keeping up with upstream
 

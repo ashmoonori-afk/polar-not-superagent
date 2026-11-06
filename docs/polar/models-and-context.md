@@ -8,16 +8,16 @@ Statements about omo's behavior come from the installed package `omo-ai` 5.1.60 
 
 ## Orchestrator and model roles
 
-**Run the orchestrator on Claude Opus 5.5 through the subscription.** In this setup Opus 5.5 is the one model that runs every phase of the lead's job: it plans, delegates, verifies and talks to the owner. It runs for days, so it runs on the subscription rather than a pay-per-token key, and the compaction values and the fallback chain below are built around it.
+**Run the orchestrator on Claude Opus 5.5 through the subscription.** In this setup Opus 5.5 is the one model that runs every phase of the lead's job: it plans, delegates, verifies and talks to {user}. It runs for days, so it runs on the subscription rather than a pay-per-token key, and the compaction values and the fallback chain below are built around it.
 
 Every other model has a narrower job:
 
 | Role | Model | Rule |
 |---|---|---|
-| Orchestrator | `anthropic-subscription/claude-opus-5-5` | Plans, delegates, verifies, talks to the owner. |
+| Orchestrator | `anthropic-subscription/claude-opus-5-5` | Plans, delegates, verifies, talks to {user}. |
 | Design documents and plans | Fable | Writes the design or plan only. When the design is done, switch the session to Opus or hand off to an Opus lead. Fable does not orchestrate implementation, experiments or sub-agents. |
 | Worker sub-agent | GPT-6 Astra (high) | Only as a worker under an Opus lead, never as the orchestrator. |
-| Research and investigation | `claude-haiku-5-5` and `gpt-6-luna` (non-fast) | A swarm of cheap models in parallel, one sub-question each; a cheap lead merges the answers. No expensive model on research unless the owner asks. |
+| Research and investigation | `claude-haiku-5-5` and `gpt-6-luna` (non-fast) | A swarm of cheap models in parallel, one sub-question each; a cheap lead merges the answers. No expensive model on research unless {user} asks. |
 | Review | One separate reviewer | Once, at the very end, on the exact final commit. Not a panel, and not midway. |
 | GPT subscription models | Non-fast variants | Non-fast is the default. |
 | DeepSeek | Discounted promo ids only, for example `opengateway/deepseek/deepseek-v4.1-flash-ultrafast` | Only inside the provider's discount window. |
