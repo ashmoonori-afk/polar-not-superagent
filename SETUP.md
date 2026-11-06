@@ -15,6 +15,8 @@ You are {user}'s Polar: their always-on messenger agent and the main orchestrato
 
    Save the answers to `~/.polar/user.md`, one line per answer. Read that file at the start of every session. From here on, {user} in this file means the person in that profile: fill in their name, form of address, language and time zone from the profile, never from this repository. The profile stays on this machine and never goes into a commit, issue, PR or public post.
 
+If you were started through an app bridge ([docs/polar/app-setup.md](docs/polar/app-setup.md)), {user} sees your questions through the Claude or ChatGPT app until your messenger bot exists, so ask one clear question at a time in this terminal and wait for the answer; in step 28, keep any login-time autostart the bootstrap installed instead of adding a second one.
+
 ## Before the messenger: explain Polar
 
 2. Before you ask any messenger question, explain the three sections below to {user} in their chat language: what Polar is, what it can take on, and how it brings in new technology from GitHub. Keep it to a few short paragraphs, answer their questions, then continue with step 3.

@@ -2,7 +2,7 @@
 
 Polar's fork of [sisyphuslabs/dori-superagent](https://github.com/sisyphuslabs/dori-superagent): not a new superagent, but a record of how one working agent harness uses Dori.
 
-The upstream README is kept unchanged as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (Korean, Simplified Chinese, Japanese) are upstream's own. The code in this repository is upstream's code at 766630f. This page, [SETUP.md](SETUP.md) and the picture below are the only things we added.
+The upstream README is kept unchanged as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (Korean, Simplified Chinese, Japanese) are upstream's own. The code in this repository is upstream's code at 766630f. This page, [SETUP.md](SETUP.md), the setup scripts in [polar/](polar/), the pages in [docs/polar/](docs/polar/), the examples in [examples/polar/](examples/polar/) and the picture below are the only things we added.
 
 ## Set up your own Polar
 
@@ -13,6 +13,22 @@ Read https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/
 ```
 
 [SETUP.md](SETUP.md) walks the agent through it: ask who you are (name, how to address you, chat language, time zone, GitHub account) and keep that in a local profile, explain what Polar is, what it can take on and how it brings in new technology from GitHub, then install agent-messenger and ask which platform to use, log in, create the bot, name itself and pick an avatar, greet you, take every request through a monitor, connect calendars and accounts through zele, onboard itself, and keep the session alive across reboots.
+
+### Set up from the Claude or ChatGPT app
+
+If you use the Claude or ChatGPT desktop app, paste this sentence into it (in the Claude app, use the Code tab, which can run commands on your computer):
+
+```text
+Read https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/docs/polar/app-setup.md and follow it step by step to set up Polar on this computer for me.
+```
+
+The app installs what Polar needs, starts Polar in a hidden terminal and passes Polar's questions to you in the app chat until Polar's messenger bot greets you. From then on you talk to Polar in the messenger. Details: [docs/polar/app-setup.md](docs/polar/app-setup.md).
+
+If you only use a chat in the browser, it cannot run anything on your computer. Paste this line into Terminal once, then answer Polar's questions with `tmux attach -t polar` (leave with Ctrl-b, then d):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/polar/bootstrap.sh | bash
+```
 
 Model roles, per-model context compaction, how omo builds each model's prompt, and the token-saving rules: [docs/polar/models-and-context.md](docs/polar/models-and-context.md).
 
@@ -64,7 +80,7 @@ These parts are ours and run around the Dori loop.
 
 ## Keeping up with upstream
 
-- Synced to upstream `main` at 766630f on 2026-11-05. Apart from this README, SETUP.md, the picture and the renamed upstream README, `main` is upstream's tree.
+- Synced to upstream `main` at 766630f on 2026-11-05. Apart from this README, SETUP.md, `polar/`, `docs/polar/`, `examples/polar/`, the picture and the renamed upstream README, `main` is upstream's tree.
 - Since 2026-11-05 we read new upstream commits every evening and compare the useful ones with the tables above.
 - We have not contributed anything to the upstream repository yet.
 
