@@ -1,0 +1,20 @@
+{
+  "compaction": {
+    "modelOverrides": {
+      "anthropic-subscription/claude-opus-5-5": {
+        "reserveTokens": 700000
+      }
+    }
+  },
+  "retry": {
+    "modelFallback": true,
+    "fallbackChains": {
+      "anthropic-subscription/claude-opus-5-5": [
+        "chatgpt-subscription/gpt-6.1-terra:high",
+        "opengateway/deepseek/deepseek-v4.1-flash-ultrafast",
+        "anthropic/claude-opus-5-5:low",
+        "google/gemini-4-argon"
+      ]
+    }
+  }
+}

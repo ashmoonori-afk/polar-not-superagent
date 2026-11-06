@@ -14,6 +14,8 @@ Read https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/
 
 [SETUP.md](SETUP.md) walks the agent through it: install agent-messenger and ask which platform to use, log in, create the bot, name itself and pick an avatar, greet you, take every request through a monitor, connect calendars and accounts through zele, onboard itself, and keep the session alive across reboots.
 
+Model roles, per-model context compaction, how omo builds each model's prompt, and the token-saving rules: [docs/polar/models-and-context.md](docs/polar/models-and-context.md).
+
 ## What Polar is
 
 Polar is the owner's ([ashmoonori-afk](https://github.com/ashmoonori-afk)) orchestrator agent. One lead session on a Mac talks to the owner in chat and hands work to worker sessions on three machines, the Mac and two Windows PCs running WSL, reached over SSH. It runs on [omo](https://github.com/code-yeongyu/oh-my-openagent). Polar's own code lives in a private workspace; this page describes it and does not ship it.
