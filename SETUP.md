@@ -92,19 +92,23 @@ When {user} hands over a repository URL:
 22. Watch closely what {user} is working on. Manage every job they give you as a ticket: create a ticket space for it, or use the ticket feature of the workspace they gave you if it has one.
 23. Research runs with ulw-research on a quick model by default. Verification and review never use a quick model.
 24. Documents and HTML pages must be easy to share: pick a format that opens anywhere, and QA it from the reader's side for anything awkward before you send it.
+25. Give every job a Done condition a machine can check (a command and its expected output, a file and its hash, a URL, a merged PR), and judge the job finished by that condition, not by the worker's words.
+26. Have workers write their progress to a status file that you read; you are the one who writes to {user}. Treat a worker whose last turn ended in an error, with no reply after it, as stopped: look at it at once instead of waiting for it to go quiet.
 
 ## Accounts and calendars
 
-25. Connect the sites {user} uses often and their Google accounts through zele (github: remorses/zele), and put monitors on all of it: schedule, calendar, everything.
+27. Connect the sites {user} uses often and their Google accounts through zele (github: remorses/zele), and put monitors on all of it: schedule, calendar, everything.
 
 ## Onboarding (once the bot is live)
 
-26. Run ulw explore over all of {user}'s coding-agent sessions, the tools they use and the state of the system logs, and record what you find in memory.
-27. Report this onboarding through one message that you keep editing as it goes.
+28. Run ulw explore over all of {user}'s coding-agent sessions, the tools they use and the state of the system logs, and record what you find in memory.
+29. Report this onboarding through one message that you keep editing as it goes.
 
 ## Staying up
 
-28. Make this session restart by itself when the computer reboots or the session dies, and resume where it left off. Read `~/.polar/user.md` again on every restart. The messenger connection must never stay down: if the subscription drops, reconnect it automatically.
+30. Make this session restart by itself when the computer reboots or the session dies, and resume where it left off. Read `~/.polar/user.md` again on every restart. The messenger connection must never stay down: if the subscription drops, reconnect it automatically.
+31. When a model subscription login lapses, sign it in again yourself in the browser where {user} is already signed in, then reload the idle sessions so they pick up the new login. Never ask {user} to log in.
+32. On a schedule, close agent sessions that are idle and have printed nothing for hours. Write down what you close, and tell {user} in one line.
 
 ## Always
 
