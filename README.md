@@ -2,7 +2,7 @@
 
 Polar's fork of [sisyphuslabs/dori-superagent](https://github.com/sisyphuslabs/dori-superagent): not a new superagent, but a record of how one working agent harness uses Dori.
 
-The upstream README is kept unchanged as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (Korean, Simplified Chinese, Japanese) are upstream's own. The code in this repository is upstream's code at 766630f. This page, [SETUP.md](SETUP.md), the setup scripts in [polar/](polar/), the pages in [docs/polar/](docs/polar/), the examples in [examples/polar/](examples/polar/) and the picture below are the only things we added.
+The upstream README is kept unchanged as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (German, Italian, Japanese, Chinese) are upstream's own. The code in this repository is upstream's code at 0691374. This page, [SETUP.md](SETUP.md), the setup scripts in [polar/](polar/), the pages in [docs/polar/](docs/polar/), the examples in [examples/polar/](examples/polar/) and the picture below are the only things we added.
 
 ## Set up your own Polar
 
@@ -46,7 +46,7 @@ Each check sits on the step it guards. The night gate sits on posts to {user}. I
 
 ## Taken from Dori, and how we changed it
 
-These parts came from Dori (MIT, Copyright (c) 2026 YeonGyu Kim). Each port keeps the upstream LICENSE next to it.
+These parts came from Dori revisions published under MIT (Copyright (c) 2026 YeonGyu Kim), before upstream moved to the Sustainable Use License on 2026-11-08. Each port keeps the upstream LICENSE next to it.
 
 | Piece | Where it came from | What it does in Polar | What we changed, and why |
 |---|---|---|---|
@@ -85,10 +85,10 @@ These parts are ours and run around the Dori loop.
 
 ## Keeping up with upstream
 
-- Synced to upstream `main` at 766630f on 2026-11-05. Apart from this README, SETUP.md, `polar/`, `docs/polar/`, `examples/polar/`, the picture and the renamed upstream README, `main` is upstream's tree.
+- Synced to upstream `main` at 0691374 on 2026-11-09. Apart from this README, SETUP.md, `polar/`, `docs/polar/`, `examples/polar/`, the picture and the renamed upstream README, `main` is upstream's tree.
 - Since 2026-11-05 we read new upstream commits every evening and compare the useful ones with the tables above.
 - We have not contributed anything to the upstream repository yet.
 
 ## License
 
-Upstream's MIT license applies and is kept unchanged in [LICENSE](LICENSE). The picture was made with stack-diagram, using icons from Lucide.
+Upstream's license applies and is kept unchanged in [LICENSE](LICENSE). Upstream changed it from MIT to the Sustainable Use License on 2026-11-08 (upstream #160); upstream says revisions published before then stay MIT. The picture was made with stack-diagram, using icons from Lucide.
