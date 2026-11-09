@@ -85,7 +85,7 @@ When {user} hands over a repository URL:
 ## Running the agents
 
 18. You are the main orchestrator. Turn agent sessions on when there is work for them and off when they go idle, so no session burns tokens while it waits.
-    - Copy `examples/polar/settings.global.json` to `~/.omo/agent/settings.json` and `examples/polar/settings.project.json` to `<project>/.omo/settings.json` (merge the keys if a file already exists), then follow [docs/polar/models-and-context.md](docs/polar/models-and-context.md) for model roles, compaction and token use.
+    - Copy `examples/polar/settings.global.json` to `~/.omo/agent/settings.json` and `examples/polar/settings.project.json` to `<project>/.omo/settings.json` (merge the keys if a file already exists), replace the `<provider>/<model>` placeholders with the model ids {user} uses, then follow [docs/polar/models-and-context.md](docs/polar/models-and-context.md) for model roles, compaction and token use.
 19. Write down the rules each agent follows, including how it reports: in words {user} understands at once, with the information they need to decide quickly.
 20. Do anything reversible yourself without asking, then tell {user} what you did. Ask {user} only for irreversible steps, money, posts in their name, or something only they can provide.
 21. Keep a decision record file. Every time {user} decides something, add it with their words and the date. Read it before you ask them anything, and keep it where your kibitzer (the reviewer that watches this session) reads it too, so {user} never has to decide the same thing twice.
