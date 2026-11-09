@@ -8,21 +8,18 @@ Statements about omo's behavior come from the installed package `omo-ai` 5.1.60 
 
 ## Orchestrator and model roles
 
-**Run the orchestrator on Claude Opus 5.5 through the subscription.** In this setup Opus 5.5 is the one model that runs every phase of the lead's job: it plans, delegates, verifies and talks to {user}. It runs for days, so it runs on the subscription rather than a pay-per-token key, and the compaction values and the fallback chain below are built around it.
+**Run the orchestrator on your strongest model through a subscription.** One model runs every phase of the lead's job: it plans, delegates, verifies and talks to {user}. It runs for days, so a subscription suits it better than a pay-per-token key, and the compaction values and the fallback chain below are built around it.
 
 Every other model has a narrower job:
 
 | Role | Model | Rule |
 |---|---|---|
-| Orchestrator | `anthropic-subscription/claude-opus-5-5` | Plans, delegates, verifies, talks to {user}. |
-| Design documents and plans | Fable | Writes the design or plan only. When the design is done, switch the session to Opus or hand off to an Opus lead. Fable does not orchestrate implementation, experiments or sub-agents. |
-| Worker sub-agent | GPT-6 Astra (high) | Only as a worker under an Opus lead, never as the orchestrator. |
-| Research and investigation | `claude-haiku-5-5` and `gpt-6-luna` (non-fast) | A swarm of cheap models in parallel, one sub-question each; a cheap lead merges the answers. No expensive model on research unless {user} asks. |
+| Orchestrator | `<lead-provider>/<lead-model>` | Plans, delegates, verifies, talks to {user}. |
+| Design documents and plans | A model that writes designs well | Writes the design or plan only, then hands off to the orchestrator model. It does not orchestrate implementation, experiments or sub-agents. |
+| Worker sub-agent | A strong coding model | Only as a worker under the lead, never as the orchestrator. |
+| Research and investigation | Cheap, fast models | A swarm of cheap models in parallel, one sub-question each; a cheap lead merges the answers. No expensive model on research unless {user} asks. |
 | Review | One separate reviewer | Once, at the very end, on the exact final commit. Not a panel, and not midway. |
-| GPT subscription models | Non-fast variants | Non-fast is the default. |
-| DeepSeek | Discounted promo ids only, for example `opengateway/deepseek/deepseek-v4.1-flash-ultrafast` | Only inside the provider's discount window. |
-| Google | `gemini-4-argon` only | omo's `visual-engineering` and `writing` categories already default to it (see below). |
-| Pay-per-token API keys | Pinned explicitly | Last resort, only for the always-on sessions. Never for workers, reviewers or chat helpers. Keep the key out of the machine-wide auth file so other sessions cannot fall onto it. |
+| Pay-per-token API keys | Pinned explicitly | Last resort, only for sessions that must stay up. Never for workers, reviewers or chat helpers. |
 
 ## Context compaction per model and per task
 
@@ -30,24 +27,23 @@ Every other model has a narrower job:
 
 ### The values
 
-All Claude models used here have a 1M-token context window.
+The example files use placeholder model keys and example numbers. Replace `<lead-provider>/<lead-model>` and `<helper-provider>/<helper-model>` with your own provider and model ids, and pick numbers for your models' context windows. The examples below assume a 1M-token window.
 
 | Where | Model | reserveTokens | keepRecentTokens |
 |---|---|---|---|
-| Global, `~/.omo/agent/settings.json` (every session on the machine) | `anthropic-subscription/claude-opus-5-5` | 700000 | default (20000) |
-| Global | `anthropic-subscription/claude-sonnet-5-5` | 700000 | default (20000) |
-| Global | `anthropic-subscription/claude-haiku-5-5` | 4096 | 12000 |
-| Project, `<project>/.omo/settings.json`: the orchestrator project | `anthropic-subscription/claude-opus-5-5` | 700000 | default (20000) |
-| Project: the general work project (workers, chat helpers) | `anthropic-subscription/claude-opus-5-5` | 500000 | default (20000) |
+| Global, `~/.omo/agent/settings.json` (every session on the machine) | `<lead-provider>/<lead-model>` | 600000 | default (20000) |
+| Global | `<helper-provider>/<helper-model>` (short research shards) | 8192 | 16000 |
+| Project, `<project>/.omo/settings.json`: the orchestrator project | `<lead-provider>/<lead-model>` | 600000 | default (20000) |
+| Project: a general work project (workers, chat helpers) | `<lead-provider>/<lead-model>` | 400000 | default (20000) |
 
-`examples/polar/settings.project.json` is the orchestrator project's file. For a worker project, change the Opus `reserveTokens` to 500000.
+`examples/polar/settings.project.json` is the orchestrator project's file. For a worker project, lower the lead model's `reserveTokens`.
 
 ### How omo picks the value for a session
 
 - **Per-model override first, then the plain setting, then the built-in default.** omo looks up `compaction.modelOverrides["<provider>/<modelId>"]`, then `compaction.reserveTokens` or `compaction.keepRecentTokens`, then its defaults of 16384 and 20000. Source: `senpi/dist/core/compaction-settings-access.js` (`compactionTokenSetting`).
-- **The key must match the provider and model id exactly.** If your Opus runs under a different provider id than `anthropic-subscription`, rename the keys, or the override never applies.
+- **The key must match the provider and model id exactly.** If the key does not match the provider id and model id your session runs on, the override never applies.
 - **A bad value stops the session instead of being ignored.** Each value must be a non-negative whole number. Anything else throws an error, so a typo cannot quietly change the budget (same file).
-- **Project settings win over global settings key by key.** omo deep-merges the global file with the project file, and the project value replaces the global one only where both set the same key. A project that overrides Opus keeps the global Sonnet and Haiku entries. Source: `senpi/dist/core/settings-manager.js` (`deepMergeObjects`, `deepMergeSettings`).
+- **Project settings win over global settings key by key.** omo deep-merges the global file with the project file, and the project value replaces the global one only where both set the same key. A project that overrides the lead model keeps the global entries for other models. Source: `senpi/dist/core/settings-manager.js` (`deepMergeObjects`, `deepMergeSettings`).
 
 ### What reserveTokens does
 
@@ -61,17 +57,17 @@ Worked out with these rules for a 1M window:
 
 | Setting | Hard limit fires above | Which trigger fires first |
 |---|---|---|
-| Opus or Sonnet, reserveTokens 700000 | 300,000 tokens (1,000,000 - 700,000) | The hard limit, well before the proactive trigger near 800,000 |
-| Opus in the work project, reserveTokens 500000 | 500,000 tokens | The hard limit |
-| Haiku, reserveTokens 4096 | 960,000 tokens, because omo raises the reserve to 40,000 (4% of the window) | The proactive trigger near 800,000 |
+| Lead model, reserveTokens 600000 | 400,000 tokens (1,000,000 - 600,000) | The hard limit, well before the proactive trigger near 800,000 |
+| Lead model in a work project, reserveTokens 400000 | 600,000 tokens | The hard limit |
+| Helper model, reserveTokens 8192 | 960,000 tokens, because omo raises the reserve to 40,000 (4% of the window) | The proactive trigger near 800,000 |
 
-So on a 1M window the Haiku reserve of 4096 does not change when Haiku compacts.
+So on a 1M window a small reserve such as 8192 does not change when the model compacts.
 
 ### What keepRecentTokens does
 
 **keepRecentTokens is the recent tail that survives compaction word for word.** omo walks back from the newest message and adds up message sizes until it reaches this budget. Everything older is summarized, and the cut never lands on a tool result. Source: `compaction.js` (`findCutPoint`).
 
-**On large windows omo can raise the tail.** When the window is above 409,600 tokens and the setting is at least 10,000, omo raises it to 5% of the window, with that part capped at 60,000 tokens. The speculative path and the model budget check use this raised value. Source: `policy.js` (`computeEffectiveKeepRecentTokens`), used in `speculative.js` and `model-usability-budget.js` in the same directory. On a 1M window, Haiku's 12000 becomes 50,000 on those paths, which is larger than the small tail the setting intends. A Haiku value below 10,000 would not be raised.
+**On large windows omo can raise the tail.** When the window is above 409,600 tokens and the setting is at least 10,000, omo raises it to 5% of the window, with that part capped at 60,000 tokens. The speculative path and the model budget check use this raised value. Source: `policy.js` (`computeEffectiveKeepRecentTokens`), used in `speculative.js` and `model-usability-budget.js` in the same directory. On a 1M window, a setting of 16000 becomes 50,000 on those paths, which is larger than the small tail the setting intends. A value below 10,000 would not be raised.
 
 ## How omo injects prompts per model
 
@@ -115,28 +111,28 @@ A custom system prompt (`--system-prompt` or an SDK loader override) replaces al
 
 ## Fallback chain
 
-**Only the projects that opt in fall back; the global file turns fallback off.** omo itself defaults `modelFallback` to true (`senpi/dist/core/retry-fallback/settings.js`), so the global file sets it to false explicitly. The project file turns it back on for Opus:
+**Only the projects that opt in fall back; the global file turns fallback off.** omo itself defaults `modelFallback` to true (`senpi/dist/core/retry-fallback/settings.js`), so the global file sets it to false explicitly. The project file turns it back on for the lead model. Replace each placeholder with a `<provider>/<model>[:variant]` id you have access to:
 
 ```json
 "retry": {
   "modelFallback": true,
   "fallbackChains": {
-    "anthropic-subscription/claude-opus-5-5": [
-      "chatgpt-subscription/gpt-6.1-terra:high",
-      "opengateway/deepseek/deepseek-v4.1-flash-ultrafast",
-      "anthropic/claude-opus-5-5:low",
-      "google/gemini-4-argon"
+    "<lead-provider>/<lead-model>": [
+      "<second-subscription-provider>/<model>",
+      "<low-cost-provider>/<fast-model>",
+      "<api-key-provider>/<lead-model>",
+      "<other-provider>/<model>"
     ]
   }
 }
 ```
 
-The order is intentional:
+A sensible order:
 
-1. The other subscription first.
-2. Then a discounted fast model.
-3. Then the pay-per-token API key: emergency only, and only for the few sessions that must run 24 hours.
-4. Then Gemini.
+1. Another subscription first.
+2. Then a low-cost fast model.
+3. Then a pay-per-token API key: emergency only, and only for the few sessions that must stay up.
+4. Then a model from another provider.
 
 How omo reads this (same `settings.js`):
 

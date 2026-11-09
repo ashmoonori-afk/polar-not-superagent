@@ -1,15 +1,12 @@
 {
   "compaction": {
     "modelOverrides": {
-      "anthropic-subscription/claude-opus-5-5": {
-        "reserveTokens": 700000
+      "<lead-provider>/<lead-model>": {
+        "reserveTokens": 600000
       },
-      "anthropic-subscription/claude-sonnet-5-5": {
-        "reserveTokens": 700000
-      },
-      "anthropic-subscription/claude-haiku-5-5": {
-        "reserveTokens": 4096,
-        "keepRecentTokens": 12000
+      "<helper-provider>/<helper-model>": {
+        "reserveTokens": 8192,
+        "keepRecentTokens": 16000
       }
     }
   },
