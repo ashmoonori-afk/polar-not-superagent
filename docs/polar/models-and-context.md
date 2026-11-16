@@ -1,6 +1,6 @@
-# Models, context compaction and token use in Polar
+# Models, context compaction and token use for your assistant
 
-This guide covers four things: which model leads and which models do the other work, how context compaction is tuned per model and per project, how omo builds the system prompt for each model, and the token-saving rules every Polar session follows.
+This guide covers four things: which model leads and which models do the other work, how context compaction is tuned per model and per project, how omo builds the system prompt for each model, and the token-saving rules every assistant session follows. Use the assistant name saved by [setup](../../SETUP.md) in live instructions.
 
 Ready-made settings files are in [examples/polar](../../examples/polar): `settings.global.json` and `settings.project.json`.
 
@@ -142,7 +142,7 @@ How omo reads this (same `settings.js`):
 
 ## Token-saving rules
 
-**Safety comes first, then correctness, then cost.** Never trade correctness or reversibility for a better cache ratio. Every Polar session follows these rules.
+**Safety comes first, then correctness, then cost.** Never trade correctness or reversibility for a better cache ratio. Every assistant session follows these rules.
 
 1. **Keep a durable record.** Write decisions (one line each), paths touched, and commands that mattered with their results into `HANDOFF.md` the moment they happen. What is not in the file counts as lost.
 2. **Scale effort to the task.** Long sessions keep cumulative read:write at or below 10:1.

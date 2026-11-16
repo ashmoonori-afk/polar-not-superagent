@@ -4,7 +4,9 @@ Polar's fork of [sisyphuslabs/dori-superagent](https://github.com/sisyphuslabs/d
 
 The upstream README is kept unchanged as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (German, Italian, Japanese, Chinese) are upstream's own. The code in this repository is upstream's code at 0691374. This page, [SETUP.md](SETUP.md), the setup scripts in [polar/](polar/), the pages in [docs/polar/](docs/polar/), the examples in [examples/polar/](examples/polar/) and the picture below are the only things we added.
 
-## Set up your own Polar
+## Set up your assistant
+
+Choose your assistant's name during first setup, with Nova offered for Enter. The saved choice is used on setup and restart; Polar remains the fork's historical name.
 
 Paste this one line into an OmO session:
 
@@ -12,19 +14,19 @@ Paste this one line into an OmO session:
 Read https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/SETUP.md and set yourself up exactly as it says, step by step, asking me only where it tells you to.
 ```
 
-[SETUP.md](SETUP.md) walks the agent through it: ask who you are (name, how to address you, chat language, time zone, GitHub account) and keep that in a local profile, explain what Polar is, what it can take on and how it brings in new technology from GitHub, then install agent-messenger and ask which platform to use, log in, create the bot, name itself and pick an avatar, greet you, take every request through a monitor, connect calendars and accounts through zele, onboard itself, and keep the session alive across reboots.
+[SETUP.md](SETUP.md) first saves the assistant name in `~/.polar/assistant-name`, then asks who you are (name, how to address you, chat language, time zone, GitHub account) and keeps that in a local profile. It explains what the assistant can take on and how it brings in new technology from GitHub, installs agent-messenger, asks which platform to use, logs in, creates the bot with your chosen name and an avatar, greets you, takes requests through a monitor, connects calendars and accounts through zele, onboards itself, and keeps the session alive across reboots.
 
 ### Set up from the Claude or ChatGPT app
 
 If you use the Claude or ChatGPT desktop app, paste this sentence into it (in the Claude app, use the Code tab, which can run commands on your computer):
 
 ```text
-Read https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/docs/polar/app-setup.md and follow it step by step to set up Polar on this computer for me.
+Read https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/docs/polar/app-setup.md and follow it step by step to set up my named assistant on this computer for me.
 ```
 
-The app installs what Polar needs, starts Polar in a hidden terminal and passes Polar's questions to you in the app chat until Polar's messenger bot greets you. From then on you talk to Polar in the messenger. Details: [docs/polar/app-setup.md](docs/polar/app-setup.md).
+The app asks for the assistant's name, installs what it needs, starts it in a hidden terminal and passes its questions to you in the app chat until its messenger bot greets you. From then on you talk to your assistant in the messenger. Details: [docs/polar/app-setup.md](docs/polar/app-setup.md).
 
-If you only use a chat in the browser, it cannot run anything on your computer. Paste this line into Terminal once, then answer Polar's questions with `tmux attach -t polar` (leave with Ctrl-b, then d):
+If you only use a chat in the browser, it cannot run anything on your computer. Paste this line into Terminal once, answer the assistant-name question (Enter accepts Nova), then answer its questions with `tmux attach -t polar` (leave with Ctrl-b, then d):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/polar/bootstrap.sh | bash
@@ -32,9 +34,9 @@ curl -fsSL https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent
 
 Model roles, per-model context compaction, how omo builds each model's prompt, and the token-saving rules: [docs/polar/models-and-context.md](docs/polar/models-and-context.md).
 
-## What Polar is
+## What your assistant is
 
-Polar is {user}'s orchestrator agent, where {user} is whoever sets it up: one long-running lead session talks to {user} in a messenger and hands work to worker sessions on the same machine or on other machines reached over SSH. It runs on [omo](https://github.com/code-yeongyu/oh-my-openagent). SETUP.md asks {user} for their name, language, time zone and GitHub account and keeps them in a local profile, so nothing about a particular person comes from this repository.
+Your assistant is {user}'s orchestrator agent, where {user} is whoever sets it up: one long-running lead session talks to {user} in a messenger and hands work to worker sessions on the same machine or on other machines reached over SSH. It runs on [omo](https://github.com/code-yeongyu/oh-my-openagent). SETUP.md saves the chosen assistant name separately from {user}'s name, language, time zone and GitHub account. The stable `~/.polar`, terminal session and service identifiers do not change with the chosen name.
 
 The tables below describe the reference setup this fork was written from: one lead session on a Mac, with worker sessions on the Mac and two Windows PCs running WSL. That setup's code lives in a private workspace; this page describes it and does not ship it.
 
