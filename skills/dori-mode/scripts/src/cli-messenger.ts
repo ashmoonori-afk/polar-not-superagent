@@ -7,6 +7,7 @@ import { pollSlackInbound } from "./messenger/slack-inbound.ts";
 import { slackPresence } from "./messenger/slack-presence.ts";
 import { Telegram } from "./messenger/telegram.ts";
 import { envInt, fileTgInboundStore, telegramInboundLoop } from "./messenger/telegram-inbound.ts";
+import { formatTelegramInbound } from "./messenger/telegram-line.ts";
 import { ThreadLedger } from "./messenger/thread-ledger.ts";
 import { realTimers } from "./messenger/typing.ts";
 import { transcribe, TranscriptionError } from "./messenger/voice.ts";
@@ -15,7 +16,7 @@ import { realClock, run } from "./run.ts";
 /** Messenger errors are one line, never a stack. */
 export const messengerErrors = [MessengerError, UnsafeMessageError, TranscriptionError] as const;
 
-const send: Command = async ({ key, need, opt, config }) => {
+const send: Command = async ({ key, need, opt, values, config }) => {
   const platform = key ?? die("send needs slack, telegram or discord");
   const to = need("to");
   const text = need("text");
@@ -33,9 +34,21 @@ const send: Command = async ({ key, need, opt, config }) => {
     if (edit) await slack.edit(to, edit, text);
     else console.log(`SENT ${(await slack.post(to, text, thread)).ts}`);
   } else if (platform === "telegram") {
+    // Number("telegram:-1001/42") is NaN, and the Telegram target drops a falsy threadId, so a bad --thread
+    // would post to the group's General topic. A flag given empty (--thread "$UNSET") is refused too: no topic
+    // means leaving the flag out.
+    const id = (flag: string, what: string): number | undefined => {
+      if (values[flag] === undefined) return undefined;
+      const value = opt(flag) ?? "";
+      return /^[1-9]\d*$/.test(value) && Number.isSafeInteger(Number(value))
+        ? Number(value)
+        : die(`--${flag} must be a Telegram ${what} id, a whole number above 0`);
+    };
+    const threadId = id("thread", "topic");
+    const target = { chatId: to, ...(threadId !== undefined ? { threadId } : {}) };
+    const messageId = id("edit", "message");
     const tg = new Telegram(fetchHttp, realClock, token("DORI_TELEGRAM_TOKEN"));
-    const target = { chatId: to, ...(thread ? { threadId: Number(thread) } : {}) };
-    if (edit) await tg.edit(target, Number(edit), text);
+    if (messageId !== undefined) await tg.edit(target, messageId, text);
     else console.log(`SENT ${await tg.send(target, text)}`);
   } else if (platform === "discord") {
     const dc = new Discord(fetchHttp, realClock, token("DORI_DISCORD_TOKEN"));
@@ -104,7 +117,6 @@ const telegramInbound = async (stateDir: string, minutes: number): Promise<void>
   const groupChatId = process.env["DORI_TELEGRAM_GROUP_ID"] === undefined ? undefined : num("DORI_TELEGRAM_GROUP_ID");
   const topicId = process.env["DORI_TELEGRAM_TOPIC_ID"] === undefined ? undefined : num("DORI_TELEGRAM_TOPIC_ID");
   console.log(`INBOUND_READY telegram owner=${ownerId} group=${groupChatId ?? "-"} topic=${topicId ?? "-"}`);
-  // Full text, JSON-escaped on one line: getUpdates cannot fetch a message twice.
   await telegramInboundLoop(
     tg,
     store,
@@ -114,11 +126,7 @@ const telegramInbound = async (stateDir: string, minutes: number): Promise<void>
       ...(topicId !== undefined ? { topicId } : {}),
     },
     minutes,
-    (i) =>
-      console.log(
-        `INBOUND ${i.kind === "edit" ? "edit:" : ""}${i.source} ${i.chat} ${i.thread ?? "-"} ${i.updateId} ${i.from} ${JSON.stringify(i.text ?? "")}` +
-          (i.media === undefined ? "" : ` file=${i.media.kind}:${i.media.fileId}`),
-      ),
+    (i) => console.log(formatTelegramInbound(i)),
     (m) => console.log(`WARN ${m}`.slice(0, 300)),
   );
 };

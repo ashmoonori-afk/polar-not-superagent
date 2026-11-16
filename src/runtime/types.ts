@@ -56,6 +56,8 @@ export type DeliverOutcome =
 export type SubmitResult = "submitted" | "wait" | "changed";
 export type Key = "enter" | "escape";
 export type CloseScope = "session" | "container";
+/** `unwrapped`: a line the terminal wrapped over several rows comes back as one line, not one line per row. */
+export type ReadOptions = { readonly unwrapped?: boolean };
 export interface SessionRuntime {
   readonly kind: RuntimeKind;
   /** The caller's own session from the runtime's env (HERDR_PANE_ID + HERDR_WORKSPACE_ID / HC_TERMINAL_ID), or undefined. */
@@ -68,7 +70,8 @@ export interface SessionRuntime {
   start(ref: SessionRef, command: string): Promise<void>;
   list(filter?: { readonly group?: string }): Promise<readonly SessionInfo[]>;
   probe(ref: SessionRef): Promise<Probe>;
-  read(ref: SessionRef, lines: number): Promise<string>;
+  /** herdr: `pane read --source recent` (`recent-unwrapped` when unwrapped). hc: `read`; unwrapped joins rows as wide as the terminal's `cols`. */
+  read(ref: SessionRef, lines: number, opts?: ReadOptions): Promise<string>;
   /** Never types into a session whose probe says shellInFront, whatever `status` says. Default `when` = "idle". */
   deliver(ref: SessionRef, text: string, opts?: DeliverOptions): Promise<DeliverOutcome>;
   submitTyped(ref: SessionRef, into: AgentIdentity): Promise<SubmitResult>;
@@ -80,8 +83,12 @@ export interface SessionRuntime {
 
 /** Id shape of a bare ref: only a herdr pane `w<ws>:p<pane>` may appear without its prefix. */
 const BARE_HERDR = /^w[0-9A-Za-z]+:p[0-9A-Za-z]+$/;
-/** Id shape after each prefix: a herdr pane, or an hc terminal address `t<n>`. */
-const ID_SHAPES: Readonly<Record<RuntimeKind, RegExp>> = { herdr: BARE_HERDR, hc: /^t[0-9]+$/ };
+/**
+ * Id shape after each prefix: a herdr pane, or a local hc terminal address. hc numbers terminals in base 36 (`t7`,
+ * `t1b`, `t2h`). Another machine's `<machine>/<address>` is not a ref: the id names the session's inbox file.
+ */
+const HC_ADDRESS = /^t[0-9a-z]+$/;
+const ID_SHAPES: Readonly<Record<RuntimeKind, RegExp>> = { herdr: BARE_HERDR, hc: HC_ADDRESS };
 const KINDS = Object.keys(ID_SHAPES) as RuntimeKind[];
 
 /** "herdr:w1:p3", "hc:t7", bare "w1:p3" (herdr). A bare "t7" is NOT a ref (it is a legal lane key); undefined otherwise. */

@@ -2,7 +2,7 @@
 
 Polar's fork of [sisyphuslabs/dori-superagent](https://github.com/sisyphuslabs/dori-superagent): not a new superagent, but a record of how one working agent harness uses Dori.
 
-The upstream README is kept unchanged as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (German, Italian, Japanese, Chinese) are upstream's own. The code in this repository is upstream's code at 0691374. This page, [SETUP.md](SETUP.md), the setup scripts in [polar/](polar/), the pages in [docs/polar/](docs/polar/), the examples in [examples/polar/](examples/polar/) and the picture below are the only things we added.
+This is a modified fork of upstream at `c7aa18f`. The upstream README is preserved as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (German, Italian, Japanese, Chinese) are upstream's own. The fork adds this page, [SETUP.md](SETUP.md), the setup scripts in [polar/](polar/), the pages in [docs/polar/](docs/polar/), the examples in [examples/polar/](examples/polar/) and the reference picture below. [SYNC-1116.md](SYNC-1116.md) records the full 57-commit review and staged delivery.
 
 ## Set up your assistant
 
@@ -87,10 +87,11 @@ These parts are ours and run around the Dori loop.
 
 ## Keeping up with upstream
 
-- Synced to upstream `main` at 0691374 on 2026-11-09. Apart from this README, SETUP.md, `polar/`, `docs/polar/`, `examples/polar/`, the picture and the renamed upstream README, `main` is upstream's tree.
+- Previous sync: upstream `0691374` on 2026-11-09.
+- First 2026-11-16 sync: upstream through `c7aa18f`, retaining the fork's setup, neutral model examples and reference orchestration choices. The remaining five reviewed commits are listed in [SYNC-1116.md](SYNC-1116.md) for the following sync PR.
 - Since 2026-11-05 we read new upstream commits every evening and compare the useful ones with the tables above.
 - We have not contributed anything to the upstream repository yet.
 
 ## License
 
-Upstream's license applies and is kept unchanged in [LICENSE](LICENSE). Upstream changed it from MIT to the Sustainable Use License on 2026-11-08 (upstream #160); upstream says revisions published before then stay MIT. The picture was made with stack-diagram, using icons from Lucide.
+Current imported code retains upstream's [Sustainable Use License](LICENSE), adopted in `ba96abf`. Earlier MIT revisions retain their original notice in [LICENSE-MIT](LICENSE-MIT); that notice does not relicense later code. This is a modified fork. The upstream CLA documents/tests remain for provenance, while the signature job runs only in the upstream repository. See [CONTRIBUTING.md](CONTRIBUTING.md). The picture was made with stack-diagram, using icons from Lucide.

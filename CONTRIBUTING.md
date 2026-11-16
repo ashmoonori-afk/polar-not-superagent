@@ -2,15 +2,9 @@
 
 Thanks for looking. This repository is a small, strict codebase; a change lands when it is one concern, it has evidence, and every gate is green.
 
-## Sign the CLA before we review
+## Upstream contribution policy
 
-Every contributor signs the [Contributor License Agreement](CLA.md) once, before a pull request of theirs can be reviewed or merged. Comment on your pull request with exactly:
-
-```
-I have read the CLA Document and I hereby sign the CLA
-```
-
-The CLA Assistant workflow then records your signature and the check turns green; it never asks again. Signing is what lets the project keep one licence for every contribution, including the relicensing rights the project needs when it changes its licence — the [licence](LICENSE) is the Sustainable Use License, and the CLA is what makes future licence changes possible without hunting down every author.
+This is a modified fork. [CLA.md](CLA.md) records the upstream project's agreement, not a signature request for this fork. The retained CLA workflow runs only when the repository is `sisyphuslabs/dori-superagent`; it does not collect signatures or create a signature branch here. If you submit a separate contribution upstream, follow that project's current contribution policy.
 
 ## Run the gates
 
@@ -25,7 +19,7 @@ bun run ci
 - `check` — Biome lint and format.
 - `typecheck` — `tsc --noEmit` for the harness and for the skill's scripts.
 - `knip` — no unused files, exports or dependencies.
-- `lint:loc` — the file-length check, against `scripts/loc-baseline.json` (a file may not grow past its baseline).
+- `lint:loc` — the file-length check: every TypeScript source and test file is at most 250 lines.
 - `test` — the harness suite.
 - `test:skill` — the skill's script suite.
 
@@ -41,4 +35,4 @@ The unit suites need `bun` and `git`, run offline, and use recorded stand-ins fo
 
 ## Licence
 
-The project is licensed under the [Sustainable Use License](LICENSE), with third-party components under their own licences. By contributing you agree your contribution is licensed under the same terms, as set out in the [CLA](CLA.md).
+Current upstream code is licensed under the [Sustainable Use License](LICENSE), with third-party components under their own licences. Earlier MIT revisions retain their notice in [LICENSE-MIT](LICENSE-MIT). Fork contributions use the repository's current licence; submitting a fork pull request does not sign the upstream CLA.
