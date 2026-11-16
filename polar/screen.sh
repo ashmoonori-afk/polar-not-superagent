@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Print the last N non-blank lines of Polar's hidden terminal (default 40).
+# Print the last N non-blank lines of the assistant's hidden terminal (default 40).
 # Usage: screen.sh [lines]    Session name: $POLAR_SESSION, default polar.
 set -euo pipefail
 
