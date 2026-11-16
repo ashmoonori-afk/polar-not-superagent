@@ -14,6 +14,7 @@ permissions:
 
 jobs:
   cla:
+    if: github.repository == 'sisyphuslabs/dori-superagent'
     runs-on: ubuntu-latest
     steps:
       - name: Check stored CLA signatures

@@ -1,5 +1,7 @@
 # Contributor License Agreement
 
+Upstream document retained for provenance. This agreement describes contributions to `sisyphuslabs/dori-superagent`; this fork does not request or record a signature. See [CONTRIBUTING.md](CONTRIBUTING.md) for the fork's policy.
+
 Thank you for your interest in contributing to dori-superagent ("Project"), owned by YeonGyu Kim ("Owner").
 
 By signing this Contributor License Agreement ("Agreement"), you agree to the following terms:
