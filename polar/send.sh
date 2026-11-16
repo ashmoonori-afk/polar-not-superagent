@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Type into Polar's hidden terminal.
+# Type into the assistant's hidden terminal.
 # Usage: send.sh "<text>"                       types the text, then presses Enter
 #        send.sh --key <Enter|Escape|Down|Up>   presses one key, for menus
 # Session name: $POLAR_SESSION, default polar.

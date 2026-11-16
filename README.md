@@ -2,9 +2,11 @@
 
 Polar's fork of [sisyphuslabs/dori-superagent](https://github.com/sisyphuslabs/dori-superagent): not a new superagent, but a record of how one working agent harness uses Dori.
 
-The upstream README is kept unchanged as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (Korean, Simplified Chinese, Japanese) are upstream's own. The code in this repository is upstream's code at 766630f. This page, [SETUP.md](SETUP.md), the setup scripts in [polar/](polar/), the pages in [docs/polar/](docs/polar/), the examples in [examples/polar/](examples/polar/) and the picture below are the only things we added.
+This is a modified fork of upstream `main` at `49fba4d` (2026-11-16). The upstream README is kept unchanged as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs are upstream's own. The fork adds this page, [SETUP.md](SETUP.md), the setup scripts in [polar/](polar/), the pages in [docs/polar/](docs/polar/), the examples in [examples/polar/](examples/polar/) and the reference picture below. [SYNC-1116.md](SYNC-1116.md) records every upstream commit decision.
 
-## Set up your own Polar
+The assistant's name is your choice, with Nova offered as the default. Polar remains the fork's historical name, not a fixed identity for your assistant. Current upstream code uses the [Sustainable Use License](LICENSE); the earlier MIT notice is retained in [LICENSE-MIT](LICENSE-MIT).
+
+## Set up your assistant
 
 Paste this one line into an OmO session:
 
@@ -12,19 +14,19 @@ Paste this one line into an OmO session:
 Read https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/SETUP.md and set yourself up exactly as it says, step by step, asking me only where it tells you to.
 ```
 
-[SETUP.md](SETUP.md) walks the agent through it: ask who you are (name, how to address you, chat language, time zone, GitHub account) and keep that in a local profile, explain what Polar is, what it can take on and how it brings in new technology from GitHub, then install agent-messenger and ask which platform to use, log in, create the bot, name itself and pick an avatar, greet you, take every request through a monitor, connect calendars and accounts through zele, onboard itself, and keep the session alive across reboots.
+[SETUP.md](SETUP.md) first asks what you want to call your assistant (Enter accepts Nova), saves the choice in `~/.polar/assistant-name`, then asks who you are (name, how to address you, chat language, time zone, GitHub account) and keeps that in a local profile. It explains what the assistant can take on and how it brings in new technology from GitHub, installs agent-messenger, asks which platform to use, logs in, creates the bot with your chosen name and an avatar, greets you, takes requests through a monitor, connects calendars and accounts through zele, onboards itself, and keeps the session alive across reboots. Setup and resume read the same saved name.
 
 ### Set up from the Claude or ChatGPT app
 
 If you use the Claude or ChatGPT desktop app, paste this sentence into it (in the Claude app, use the Code tab, which can run commands on your computer):
 
 ```text
-Read https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/docs/polar/app-setup.md and follow it step by step to set up Polar on this computer for me.
+Read https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/docs/polar/app-setup.md and follow it step by step to set up my named assistant on this computer for me.
 ```
 
-The app installs what Polar needs, starts Polar in a hidden terminal and passes Polar's questions to you in the app chat until Polar's messenger bot greets you. From then on you talk to Polar in the messenger. Details: [docs/polar/app-setup.md](docs/polar/app-setup.md).
+The app asks for the assistant's name, installs what it needs, starts it in a hidden terminal and passes its questions to you in the app chat until its messenger bot greets you. From then on you talk to your assistant in the messenger. Details: [docs/polar/app-setup.md](docs/polar/app-setup.md).
 
-If you only use a chat in the browser, it cannot run anything on your computer. Paste this line into Terminal once, then answer Polar's questions with `tmux attach -t polar` (leave with Ctrl-b, then d):
+If you only use a chat in the browser, it cannot run anything on your computer. Paste this line into Terminal once, answer the name question (Enter accepts Nova), then answer your assistant's questions with `tmux attach -t polar` (leave with Ctrl-b, then d):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent/main/polar/bootstrap.sh | bash
@@ -32,9 +34,9 @@ curl -fsSL https://raw.githubusercontent.com/ashmoonori-afk/polar-not-superagent
 
 Model roles, per-model context compaction, how omo builds each model's prompt, and the token-saving rules: [docs/polar/models-and-context.md](docs/polar/models-and-context.md).
 
-## What Polar is
+## What your assistant is
 
-Polar is {user}'s orchestrator agent, where {user} is whoever sets it up: one long-running lead session talks to {user} in a messenger and hands work to worker sessions on the same machine or on other machines reached over SSH. It runs on [omo](https://github.com/code-yeongyu/oh-my-openagent). SETUP.md asks {user} for their name, language, time zone and GitHub account and keeps them in a local profile, so nothing about a particular person comes from this repository.
+Your assistant is {user}'s orchestrator agent, where {user} is whoever sets it up: one long-running lead session talks to {user} in a messenger and hands work to worker sessions on the same machine or on other machines reached over SSH. It runs on [omo](https://github.com/code-yeongyu/oh-my-openagent). SETUP.md saves the chosen assistant name separately from {user}'s name, language, time zone and GitHub account, so nothing about a particular person comes from this repository. The stable `~/.polar`, terminal session and service identifiers do not change when you choose a name.
 
 The tables below describe the reference setup this fork was written from: one lead session on a Mac, with worker sessions on the Mac and two Windows PCs running WSL. That setup's code lives in a private workspace; this page describes it and does not ship it.
 
@@ -85,10 +87,21 @@ These parts are ours and run around the Dori loop.
 
 ## Keeping up with upstream
 
-- Synced to upstream `main` at 766630f on 2026-11-05. Apart from this README, SETUP.md, `polar/`, `docs/polar/`, `examples/polar/`, the picture and the renamed upstream README, `main` is upstream's tree.
+- Initial snapshot: upstream `main` at `766630f` on 2026-11-05, with separate fork setup scripts, settings examples, reference documentation and picture.
+- Updated to upstream `main` at `49fba4d` on 2026-11-16, preserving upstream history. The [57-commit decision ledger](SYNC-1116.md) explains the fork adaptations. The upstream runtime adapters, hooks and safety fixes are included; the reference setup's own SSH, tmux, messaging and watchdog choices remain documented above.
 - Since 2026-11-05 we read new upstream commits every evening and compare the useful ones with the tables above.
 - We have not contributed anything to the upstream repository yet.
 
+The harness tests run against a fake herdr, a fake hc and a fake gh with a clock the tests move; the end-to-end tests start a real herdr server or a real hc core in an isolated session with a fake agent script in place of omo, and each skips itself when its binary is not on PATH. Dori mode's tests run against fake herdr, git and gh and touch nothing real. CI runs the same on Ubuntu and macOS.
+
+## What this is not
+
+The harness is the minimal version and not our production stack. Left out on purpose: the cross-machine mesh, heavy-slot scheduling, the chat and ticket-tracker bridges, and receipts for whole test suites. The part that runs on herdr and omo alone is here: roles, lanes, the inbox, the duty loop, the hourly loop and backlog, and the review and merge gate. Dori mode is a separate CLI with its own messenger pieces, host guard and heavy-slot runner; the harness imports nothing from it.
+
+## Contributing
+
+The gates, test commands and pull request rules are in [CONTRIBUTING.md](CONTRIBUTING.md). The upstream CLA document and its regression tests are retained for provenance. Its signature workflow runs only in the upstream repository; this fork does not request a signature or collect CLA records.
+
 ## License
 
-Upstream's MIT license applies and is kept unchanged in [LICENSE](LICENSE). The picture was made with stack-diagram, using icons from Lucide.
+Current upstream code is under the [Sustainable Use License](LICENSE), adopted by upstream in `ba96abf`; it is not MIT-only. Earlier revisions published under MIT retain their original terms and notice in [LICENSE-MIT](LICENSE-MIT). This repository is a modified fork, including its separate named-assistant setup. The picture was made with stack-diagram, using icons from Lucide.
