@@ -1,0 +1,32 @@
+{
+  "target": "examples/fixed.html",
+  "targetUrl": "examples/fixed.html",
+  "checkedAt": "2026-10-29T14:30:45.128Z",
+  "summary": {
+    "mustFix": 0,
+    "shouldFix": 0,
+    "total": 0,
+    "passed": true
+  },
+  "screenshots": {
+    "mobile": "examples/screenshots/fixed-mobile-390x844.png",
+    "desktop": "examples/screenshots/fixed-desktop-1280x800.png"
+  },
+  "metrics": {
+    "mobile": {
+      "scrollWidth": 390,
+      "viewportWidth": 390,
+      "cls": 0.0002,
+      "shiftEvents": 4,
+      "dataRegionsCount": 1
+    },
+    "desktop": {
+      "scrollWidth": 1280,
+      "viewportWidth": 1280,
+      "cls": 0,
+      "shiftEvents": 4,
+      "dataRegionsCount": 1
+    }
+  },
+  "findings": []
+}
