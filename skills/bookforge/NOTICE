@@ -1,0 +1,18 @@
+bookforge - copy notice
+
+Source: https://github.com/gongnyang/bookforge at commit 3f1e85ee501f5984acb8cd6d92ecb7a4c3fb5374 (2026-09-01).
+Licence: MIT, Copyright (c) 2026 gongnyang. The full text is in LICENSE in this folder and applies to every
+file taken from the source. The bundled fonts in assets/fonts/ keep their own SIL Open Font License 1.1
+terms; see assets/fonts/LICENSES.md and references/font-licenses.md.
+
+What this copy changes:
+- Pretendard: the source ships TrueType files it converted itself from the official OTFs and keeps the name
+  "Pretendard". Pretendard declares that name as a Reserved Font Name, so OFL does not allow a modified
+  version to keep it. This copy ships the official TrueType files from the Pretendard v1.3.9 release
+  (public/static/alternative/) instead. Their name tables, weight classes and glyph counts match the
+  converted files, so the styles resolve the same fonts. scripts/convert_fonts.py now converts Noto Serif KR
+  only, and assets/fonts/LICENSES.md and references/font-licenses.md carry the correction.
+- Left out: README.md, README.en.md, AGENTS.md (repository-level docs) and examples/ (9 sample PDFs and
+  35 preview PNGs, 24.4 MB). tests/mutations/fixture_from_example.py still takes any rendered PDF path.
+- Everything else (SKILL.md, modes, references, scripts, styles, templates, tests, vendor bundle, other
+  fonts) is unchanged.
