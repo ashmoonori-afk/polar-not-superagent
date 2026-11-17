@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northstar Freight — Generative UI Research Brief</title>
+  <style>
+    :root {
+      --bg-canvas: #f3f2ee;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f8f7f4;
+      --bg-highlight: #fdf6e7;
+      --bg-skeleton: #eeece6;
+      --text-primary: #111827;
+      --text-secondary: #374151;
+      --text-muted: #525866;
+      --border-subtle: rgba(17, 24, 39, 0.09);
+      --border-strong: rgba(17, 24, 39, 0.16);
+      --accent-blue: #1d4ed8;
+      --accent-green: #047857;
+      --accent-danger: #b91c1c;
+      --pill-people-bg: #eef4ff;
+      --pill-people-fg: #1e40af;
+      --pill-news-bg: #ecfdf5;
+      --pill-news-fg: #065f46;
+      --pill-company-bg: #f3f4f6;
+      --pill-company-fg: #374151;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --text-title: 15px;
+      --text-body: 13px;
+      --text-meta: 12px;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-pill: 999px;
+      --shadow-card: 0 4px 20px rgba(17, 24, 39, 0.04);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-canvas: #0f1115;
+        --bg-surface: #161920;
+        --bg-subtle: #1e222b;
+        --bg-highlight: #262318;
+        --bg-skeleton: #232730;
+        --text-primary: #f3f4f6;
+        --text-secondary: #d1d5db;
+        --text-muted: #9ca3af;
+        --border-subtle: rgba(255, 255, 255, 0.10);
+        --border-strong: rgba(255, 255, 255, 0.18);
+        --accent-blue: #60a5fa;
+        --accent-green: #34d399;
+        --accent-danger: #f87171;
+        --pill-people-bg: #1e293b;
+        --pill-people-fg: #93c5fd;
+        --pill-news-bg: #064e3b;
+        --pill-news-fg: #6ee7b7;
+        --pill-company-bg: #1f2937;
+        --pill-company-fg: #e5e7eb;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      line-height: 1.45;
+      padding: var(--space-4);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding: var(--space-6);
+      }
+    }
+
+    .workspace {
+      max-width: 640px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .task-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      padding: var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      flex-wrap: nowrap;
+    }
+
+    .entity-identity {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-2);
+      min-width: 0;
+    }
+
+    .entity-title {
+      font-size: var(--text-title);
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .entity-domain {
+      font-size: var(--text-body);
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--text-meta);
+      font-weight: 500;
+      color: var(--accent-blue);
+      font-variant-numeric: tabular-nums;
+      min-width: 96px;
+      justify-content: flex-end;
+    }
+
+    .live-badge[data-status="done"] {
+      color: var(--accent-green);
+    }
+
+    .live-badge[data-status="error"] {
+      color: var(--accent-danger);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: var(--radius-pill);
+      background-color: currentColor;
+      display: inline-block;
+    }
+
+    .timeline-region {
+      position: relative;
+      min-height: 244px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .timeline-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      position: relative;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr) 108px;
+      align-items: center;
+      gap: var(--space-2);
+      height: 36px;
+      padding: 0 var(--space-1);
+      border-radius: var(--radius-sm);
+      transition: background-color 700ms ease-out;
+    }
+
+    @media (min-width: 560px) {
+      .timeline-row {
+        grid-template-columns: 20px minmax(0, 1fr) 132px;
+        padding: 0 var(--space-2);
+      }
+    }
+
+    .timeline-row[data-fresh="true"] {
+      background-color: var(--bg-highlight);
+    }
+
+    .node-gutter {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .node-gutter::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 1px;
+      transform: translateX(-50%);
+      background-color: var(--border-strong);
+    }
+
+    .timeline-row:first-child .node-gutter::before {
+      top: 50%;
+    }
+
+    .timeline-row:last-child .node-gutter::before {
+      bottom: 50%;
+    }
+
+    .node-dot {
+      position: relative;
+      z-index: 1;
+      width: 7px;
+      height: 7px;
+      border-radius: var(--radius-pill);
+      background-color: var(--text-muted);
+      box-shadow: 0 0 0 3px var(--bg-surface);
+    }
+
+    .timeline-row[data-cat="people"] .node-dot {
+      background-color: var(--accent-blue);
+    }
+
+    .timeline-row[data-cat="news"] .node-dot {
+      background-color: var(--accent-green);
+    }
+
+    .row-main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--space-2);
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .row-text {
+      font-size: var(--text-body);
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+
+    .row-text[data-decoding="true"] {
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+    }
+
+    .cat-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-meta);
+      font-weight: 500;
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+
+    .cat-pill[data-cat="company"] {
+      background-color: var(--pill-company-bg);
+      color: var(--pill-company-fg);
+    }
+
+    .cat-pill[data-cat="news"] {
+      background-color: var(--pill-news-bg);
+      color: var(--pill-news-fg);
+    }
+
+    .cat-pill[data-cat="people"] {
+      background-color: var(--pill-people-bg);
+      color: var(--pill-people-fg);
+    }
+
+    .row-source {
+      font-family: var(--font-mono);
+      font-size: var(--text-meta);
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .skeleton-bar {
+      display: inline-block;
+      height: 12px;
+      width: 70%;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-skeleton);
+    }
+
+    .chips-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-2);
+    }
+
+    @media (min-width: 560px) {
+      .chips-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .status-chip {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      height: 32px;
+      padding: 0 var(--space-3);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-pill);
+      background-color: var(--bg-surface);
+      font-size: var(--text-meta);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chip-icon {
+      font-weight: 600;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .status-chip[data-state="done"] .chip-icon {
+      color: var(--accent-green);
+    }
+
+    .status-chip[data-state="checking"] .chip-icon {
+      color: var(--accent-blue);
+    }
+
+    .chip-label {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .chip-val {
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--border-subtle);
+      flex-wrap: nowrap;
+    }
+
+    .progress-summary {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-meta);
+      color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+      min-height: 24px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #progressStatus {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .footer-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-1);
+      min-height: 44px;
+      min-width: 112px;
+      padding: 0 var(--space-3);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: var(--text-meta);
+      font-weight: 500;
+      cursor: pointer;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn:hover {
+      background-color: var(--bg-subtle);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--accent-blue);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background-color: var(--pill-people-bg);
+      color: var(--pill-people-fg);
+      border-color: transparent;
+    }
+
+    .state-panel {
+      display: none;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: var(--space-2);
+      min-height: 244px;
+      padding: var(--space-4);
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-subtle);
+    }
+
+    .state-panel[data-active="true"] {
+      display: flex;
+    }
+
+    .state-title {
+      font-size: var(--text-title);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .state-desc {
+      font-size: var(--text-body);
+      color: var(--text-secondary);
+    }
+
+    .composer-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+
+    .composer-input {
+      flex: 1;
+      min-height: 44px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: var(--text-body);
+      padding: 0 var(--space-2);
+      border-radius: var(--radius-sm);
+    }
+
+    .composer-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .composer-input:focus-visible {
+      outline: 2px solid var(--accent-blue);
+    }
+
+    .demo-toolbar {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-2);
+    }
+
+    .demo-toolbar .btn {
+      min-width: 0;
+      width: 100%;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .timeline-row {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="workspace">
+    <main
+      class="task-card"
+      data-region="research-brief"
+      data-stream="research-card"
+      data-states="loading,empty,error"
+      aria-live="polite"
+    >
+      <header class="card-header">
+        <div class="entity-identity">
+          <h1 class="entity-title">Northstar Freight</h1>
+          <span class="entity-domain">northstarfreight.io</span>
+        </div>
+        <div class="live-badge" id="liveBadge" data-status="checking">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="liveBadgeText">Researching</span>
+        </div>
+      </header>
+
+      <section class="timeline-region" aria-label="Research findings timeline">
+        <ol class="timeline-list" id="timelineList">
+          <li class="timeline-row" id="slot-0" data-cat="people">
+            <div class="node-gutter"><span class="node-dot"></span></div>
+            <div class="row-main">
+              <span class="row-text" id="text-0"><span class="skeleton-bar" data-state="loading"></span></span>
+              <span class="cat-pill" id="pill-0" data-cat="people">people</span>
+            </div>
+            <span class="row-source" id="src-0">linkedin.com</span>
+          </li>
+          <li class="timeline-row" id="slot-1" data-cat="people">
+            <div class="node-gutter"><span class="node-dot"></span></div>
+            <div class="row-main">
+              <span class="row-text" id="text-1"><span class="skeleton-bar"></span></span>
+              <span class="cat-pill" id="pill-1" data-cat="people">people</span>
+            </div>
+            <span class="row-source" id="src-1">linkedin.com</span>
+          </li>
+          <li class="timeline-row" id="slot-2" data-cat="news">
+            <div class="node-gutter"><span class="node-dot"></span></div>
+            <div class="row-main">
+              <span class="row-text" id="text-2"><span class="skeleton-bar"></span></span>
+              <span class="cat-pill" id="pill-2" data-cat="news">news</span>
+            </div>
+            <span class="row-source" id="src-2">supplychaindive.com</span>
+          </li>
+          <li class="timeline-row" id="slot-3" data-cat="news">
+            <div class="node-gutter"><span class="node-dot"></span></div>
+            <div class="row-main">
+              <span class="row-text" id="text-3"><span class="skeleton-bar"></span></span>
+              <span class="cat-pill" id="pill-3" data-cat="news">news</span>
+            </div>
+            <span class="row-source" id="src-3">freightwaves.com</span>
+          </li>
+          <li class="timeline-row" id="slot-4" data-cat="company">
+            <div class="node-gutter"><span class="node-dot"></span></div>
+            <div class="row-main">
+              <span class="row-text" id="text-4">Ships temperature-controlled loads for Haverford Foods</span>
+              <span class="cat-pill" id="pill-4" data-cat="company">company</span>
+            </div>
+            <span class="row-source" id="src-4">northstarfreight.io</span>
+          </li>
+          <li class="timeline-row" id="slot-5" data-cat="company">
+            <div class="node-gutter"><span class="node-dot"></span></div>
+            <div class="row-main">
+              <span class="row-text" id="text-5">Founded 2016 in Columbus, Ohio · 380 employees</span>
+              <span class="cat-pill" id="pill-5" data-cat="company">company</span>
+            </div>
+            <span class="row-source" id="src-5">northstarfreight.io</span>
+          </li>
+        </ol>
+
+        <div class="state-panel" id="emptyPanel" data-state="empty" role="status">
+          <p class="state-title">No public sources matched "Northstar Freight"</p>
+          <p class="state-desc">Check the domain spelling or broaden the search scope to include registry filings.</p>
+          <button class="btn" type="button" id="emptyResetBtn">Broaden search</button>
+        </div>
+
+        <div class="state-panel" id="errorPanel" data-state="error" role="alert">
+          <p class="state-title">Source connector timed out on step 4 of 6</p>
+          <p class="state-desc">3 verified findings were preserved. Retry from the failed source without losing progress.</p>
+          <button class="btn" type="button" id="errorRetryBtn">Retry failed step</button>
+        </div>
+      </section>
+
+      <section class="chips-grid" aria-label="Category progress">
+        <div class="status-chip" id="chip-company" data-state="checking">
+          <span class="chip-icon" id="chip-company-icon">◌</span>
+          <span class="chip-label">Company</span>
+          <span class="chip-val" id="chip-company-val">checking</span>
+        </div>
+        <div class="status-chip" id="chip-funding" data-state="queued">
+          <span class="chip-icon" id="chip-funding-icon">•</span>
+          <span class="chip-label">Funding</span>
+          <span class="chip-val" id="chip-funding-val">queued</span>
+        </div>
+        <div class="status-chip" id="chip-news" data-state="checking">
+          <span class="chip-icon" id="chip-news-icon">◌</span>
+          <span class="chip-label">News</span>
+          <span class="chip-val" id="chip-news-val">checking</span>
+        </div>
+        <div class="status-chip" id="chip-people" data-state="queued">
+          <span class="chip-icon" id="chip-people-icon">•</span>
+          <span class="chip-label">People</span>
+          <span class="chip-val" id="chip-people-val">queued</span>
+        </div>
+      </section>
+
+      <footer class="card-footer">
+        <div class="progress-summary" id="progressSummary">
+          <span id="progressStatus">Reading freightwaves.com · 4 of 11 sources</span>
+        </div>
+        <div class="footer-actions">
+          <button class="btn btn-primary" type="button" id="primaryActionBtn">
+            Stop run
+          </button>
+        </div>
+      </footer>
+    </main>
+
+    <form class="composer-card" id="composerForm" onsubmit="return false;">
+      <input
+        id="promptInput"
+        class="composer-input"
+        type="text"
+        aria-label="Ask a follow-up question"
+        placeholder="Ask anything, or type / for skills"
+        autocomplete="off"
+      />
+      <button class="btn" type="submit">Send</button>
+    </form>
+
+    <nav class="demo-toolbar" aria-label="Demo state controls">
+      <button class="btn" type="button" id="replayBtn">Replay stream</button>
+      <button class="btn" type="button" id="showEmptyBtn">Empty state</button>
+      <button class="btn" type="button" id="showErrorBtn">Error state</button>
+    </nav>
+  </div>
+
+  <script>
+    const STEPS = [
+      {
+        slot: 3,
+        scramble: "Rais3d a $48M S3ri3s B l3d by F0rg3 V3ntur3s",
+        text: "Raised a $48M Series B led by Forge Ventures",
+        chip: { id: "funding", val: "$48M" },
+        progress: "Reading supplychaindive.com · 6 of 11 sources",
+        delay: 140
+      },
+      {
+        slot: 2,
+        scramble: "0p3ning an Atlanta hub t0 c0v3r S0uth3ast",
+        text: "Opening an Atlanta hub to cover the Southeast",
+        chip: { id: "news", val: "4 stories" },
+        progress: "Reading linkedin.com · 8 of 11 sources",
+        delay: 360
+      },
+      {
+        slot: 1,
+        scramble: "Dana Whitfi3ld j0in3d as VP 0p3rati0ns",
+        text: "Dana Whitfield joined as VP Operations",
+        chip: { id: "company", val: "6 pages" },
+        progress: "Reading boards.greenhouse.io · 10 of 11 sources",
+        delay: 600
+      },
+      {
+        slot: 0,
+        scramble: "14 0p3n 0p3rati0ns r0l3s, 9 p0st3d this m0nth",
+        text: "14 open operations roles, 9 posted this month",
+        chip: { id: "people", val: "3 people" },
+        progress: "✓ Brief ready · 11 sources in 18s",
+        done: true,
+        delay: 860
+      }
+    ];
+
+    let timers = [];
+
+    function clearTimers() {
+      timers.forEach((t) => {
+        clearTimeout(t);
+      });
+      timers = [];
+    }
+
+    function setChip(id, state, val) {
+      const chip = document.getElementById(`chip-${id}`);
+      const icon = document.getElementById(`chip-${id}-icon`);
+      const valEl = document.getElementById(`chip-${id}-val`);
+      if (!chip) return;
+      chip.setAttribute("data-state", state);
+      icon.textContent = state === "done" ? "✓" : state === "checking" ? "◌" : "•";
+      valEl.textContent = val;
+    }
+
+    function showTimelineMode(mode) {
+      const list = document.getElementById("timelineList");
+      const emptyPanel = document.getElementById("emptyPanel");
+      const errorPanel = document.getElementById("errorPanel");
+      list.style.display = mode === "stream" ? "flex" : "none";
+      emptyPanel.setAttribute("data-active", mode === "empty" ? "true" : "false");
+      errorPanel.setAttribute("data-active", mode === "error" ? "true" : "false");
+    }
+
+    function startStream() {
+      clearTimers();
+      showTimelineMode("stream");
+
+      const badge = document.getElementById("liveBadge");
+      const badgeText = document.getElementById("liveBadgeText");
+      const progressStatus = document.getElementById("progressStatus");
+      const primaryBtn = document.getElementById("primaryActionBtn");
+
+      badge.setAttribute("data-status", "checking");
+      badgeText.textContent = "Researching";
+      progressStatus.textContent = "Reading freightwaves.com · 4 of 11 sources";
+      primaryBtn.textContent = "Stop run";
+
+      setChip("company", "checking", "checking");
+      setChip("funding", "queued", "queued");
+      setChip("news", "checking", "checking");
+      setChip("people", "queued", "queued");
+
+      [0, 1, 2, 3].forEach((idx) => {
+        const textEl = document.getElementById(`text-${idx}`);
+        const rowEl = document.getElementById(`slot-${idx}`);
+        rowEl.setAttribute("data-fresh", "false");
+        textEl.setAttribute("data-decoding", "false");
+        textEl.innerHTML = '<span class="skeleton-bar" data-state="loading"></span>';
+      });
+
+      STEPS.forEach((step) => {
+        timers.push(
+          setTimeout(() => {
+            const textEl = document.getElementById(`text-${step.slot}`);
+            const rowEl = document.getElementById(`slot-${step.slot}`);
+            rowEl.setAttribute("data-fresh", "true");
+            textEl.setAttribute("data-decoding", "true");
+            textEl.textContent = step.scramble;
+          }, step.delay)
+        );
+
+        timers.push(
+          setTimeout(() => {
+            const textEl = document.getElementById(`text-${step.slot}`);
+            const rowEl = document.getElementById(`slot-${step.slot}`);
+            textEl.setAttribute("data-decoding", "false");
+            textEl.textContent = step.text;
+            if (step.chip) {
+              setChip(step.chip.id, "done", step.chip.val);
+            }
+            progressStatus.textContent = step.progress;
+
+            if (step.done) {
+              badge.setAttribute("data-status", "done");
+              badgeText.textContent = "Brief ready";
+              primaryBtn.textContent = "Copy brief";
+            }
+
+            setTimeout(() => {
+              rowEl.setAttribute("data-fresh", "false");
+            }, 500);
+          }, step.delay + 180)
+        );
+      });
+    }
+
+    document.getElementById("replayBtn").addEventListener("click", startStream);
+    document.getElementById("emptyResetBtn").addEventListener("click", startStream);
+    document.getElementById("errorRetryBtn").addEventListener("click", startStream);
+
+    document.getElementById("showEmptyBtn").addEventListener("click", () => {
+      clearTimers();
+      showTimelineMode("empty");
+      document.getElementById("liveBadge").setAttribute("data-status", "done");
+      document.getElementById("liveBadgeText").textContent = "0 results";
+      document.getElementById("progressStatus").textContent = "Checked 4 registries · 0 matches";
+      document.getElementById("primaryActionBtn").textContent = "Broaden search";
+    });
+
+    document.getElementById("showErrorBtn").addEventListener("click", () => {
+      clearTimers();
+      showTimelineMode("error");
+      document.getElementById("liveBadge").setAttribute("data-status", "error");
+      document.getElementById("liveBadgeText").textContent = "Interrupted";
+      document.getElementById("progressStatus").textContent = "Paused at 3 of 11 sources";
+      document.getElementById("primaryActionBtn").textContent = "Retry run";
+    });
+
+    document.getElementById("primaryActionBtn").addEventListener("click", () => {
+      const btn = document.getElementById("primaryActionBtn");
+      if (btn.textContent.trim() === "Copy brief") {
+        btn.textContent = "✓ Copied";
+        setTimeout(() => {
+          btn.textContent = "Copy brief";
+        }, 1200);
+      } else {
+        startStream();
+      }
+    });
+
+    startStream();
+  </script>
+</body>
+</html>
