@@ -1,0 +1,362 @@
+{
+  "target": "examples/flawed.html",
+  "targetUrl": "examples/flawed.html",
+  "checkedAt": "2026-10-29T14:28:22.065Z",
+  "summary": {
+    "mustFix": 45,
+    "shouldFix": 2,
+    "total": 47,
+    "passed": false
+  },
+  "screenshots": {
+    "mobile": "examples/screenshots/flawed-mobile-390x844.png",
+    "desktop": "examples/screenshots/flawed-desktop-1280x800.png"
+  },
+  "metrics": {
+    "mobile": {
+      "scrollWidth": 547,
+      "viewportWidth": 390,
+      "cls": 0.1306,
+      "shiftEvents": 5,
+      "dataRegionsCount": 1
+    },
+    "desktop": {
+      "scrollWidth": 1280,
+      "viewportWidth": 1280,
+      "cls": 0.0392,
+      "shiftEvents": 5,
+      "dataRegionsCount": 1
+    }
+  },
+  "findings": [
+    {
+      "id": "horizontal-overflow",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "document.documentElement",
+      "message": "Page overflows horizontally: scrollWidth is 547px at 390px viewport width."
+    },
+    {
+      "id": "missing-alt",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "img",
+      "message": "Image is missing an alt attribute (data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><rect width='16' height='16' rx='4' fill='%232563eb'/></svg>)."
+    },
+    {
+      "id": "small-font-size",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span.domain (\"northstarfreight.io\")",
+      "message": "Computed font-size is 10px (minimum legible size is 12px)."
+    },
+    {
+      "id": "low-contrast",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span.domain (\"northstarfreight.io\")",
+      "message": "Text contrast ratio is 1.90:1 (requires at least 4.5:1 for WCAG AA)."
+    },
+    {
+      "id": "small-font-size",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span#statusBadge.status-badge (\"• Researching\")",
+      "message": "Computed font-size is 10px (minimum legible size is 12px)."
+    },
+    {
+      "id": "edge-crowding",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span#statusBadge.status-badge (\"• Researching\")",
+      "message": "Content touches or crowds viewport edge on mobile (left=316px, rightGap=7px; minimum padding is 12px)."
+    },
+    {
+      "id": "overlapping-or-clipped-text",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "div.row (\"Dana Whitfield joined as VP Operatio\")",
+      "message": "Text is horizontally clipped (369px content inside 180px box without ellipsis)."
+    },
+    {
+      "id": "small-font-size",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span (\"Dana Whitfield joined as VP Operatio\")",
+      "message": "Computed font-size is 10px (minimum legible size is 12px)."
+    },
+    {
+      "id": "edge-crowding",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span (\"Dana Whitfield joined as VP Operatio\")",
+      "message": "Content touches or crowds viewport edge on mobile (left=7px, rightGap=79px; minimum padding is 12px)."
+    },
+    {
+      "id": "small-font-size",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span.row-source (\"linkedin.com\")",
+      "message": "Computed font-size is 9px (minimum legible size is 12px)."
+    },
+    {
+      "id": "low-contrast",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span.row-source (\"linkedin.com\")",
+      "message": "Text contrast ratio is 1.65:1 (requires at least 4.5:1 for WCAG AA)."
+    },
+    {
+      "id": "overlapping-or-clipped-text",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "div.row (\"Opening an Atlanta regional office t\")",
+      "message": "Text is horizontally clipped (444px content inside 180px box without ellipsis)."
+    },
+    {
+      "id": "small-font-size",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span (\"Opening an Atlanta regional office t\")",
+      "message": "Computed font-size is 10px (minimum legible size is 12px)."
+    },
+    {
+      "id": "edge-crowding",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span (\"Opening an Atlanta regional office t\")",
+      "message": "Content touches or crowds viewport edge on mobile (left=7px, rightGap=42px; minimum padding is 12px)."
+    },
+    {
+      "id": "small-font-size",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span.row-source (\"supplychaindive.com\")",
+      "message": "Computed font-size is 9px (minimum legible size is 12px)."
+    },
+    {
+      "id": "low-contrast",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span.row-source (\"supplychaindive.com\")",
+      "message": "Text contrast ratio is 1.65:1 (requires at least 4.5:1 for WCAG AA)."
+    },
+    {
+      "id": "edge-crowding",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span.row-source (\"supplychaindive.com\")",
+      "message": "Content touches or crowds viewport edge on mobile (left=348px, rightGap=-61px; minimum padding is 12px)."
+    },
+    {
+      "id": "overlapping-or-clipped-text",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "div.row (\"Raised a $48M Series B led by Forge \")",
+      "message": "Text is horizontally clipped (459px content inside 180px box without ellipsis)."
+    },
+    {
+      "id": "edge-crowding",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span (\"Raised a $48M Series B led by Forge \")",
+      "message": "Content touches or crowds viewport edge on mobile (left=7px, rightGap=10px; minimum padding is 12px)."
+    },
+    {
+      "id": "low-contrast",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span.row-source (\"freightwaves.com\")",
+      "message": "Text contrast ratio is 1.65:1 (requires at least 4.5:1 for WCAG AA)."
+    },
+    {
+      "id": "overlapping-or-clipped-text",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "div.row (\"Ships temperature-controlled loads f\")",
+      "message": "Text is horizontally clipped (473px content inside 180px box without ellipsis)."
+    },
+    {
+      "id": "low-contrast",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span.row-source (\"northstarfreight.io\")",
+      "message": "Text contrast ratio is 1.65:1 (requires at least 4.5:1 for WCAG AA)."
+    },
+    {
+      "id": "overlapping-or-clipped-text",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "div.row (\"Founded 2016 in Columbus, Ohio · 380\")",
+      "message": "Text is horizontally clipped (379px content inside 180px box without ellipsis)."
+    },
+    {
+      "id": "low-contrast",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "span.row-source (\"linkedin.com\")",
+      "message": "Text contrast ratio is 1.65:1 (requires at least 4.5:1 for WCAG AA)."
+    },
+    {
+      "id": "small-tap-target",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "button.btn-small (\"Email me\")",
+      "message": "Mobile tap target is 56x22px (minimum is 44x44px)."
+    },
+    {
+      "id": "small-tap-target",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "button.btn-small (\"Send\")",
+      "message": "Mobile tap target is 37x22px (minimum is 44x44px)."
+    },
+    {
+      "id": "layout-shift",
+      "severity": "must-fix",
+      "viewport": "mobile",
+      "element": "window (PerformanceObserver layout-shift)",
+      "message": "Cumulative Layout Shift (CLS) during load/streaming is 0.1306 (exceeds 0.10 threshold)."
+    },
+    {
+      "id": "missing-states",
+      "severity": "should-fix",
+      "viewport": "mobile",
+      "element": "main.card (\"Northstar Freight northstarfreight.i\")",
+      "message": "Data region is missing declared loading/empty/error state handling (provide [data-state] slots, templates, or data-states=\"loading,empty,error\")."
+    },
+    {
+      "id": "missing-alt",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "img",
+      "message": "Image is missing an alt attribute (data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><rect width='16' height='16' rx='4' fill='%232563eb'/></svg>)."
+    },
+    {
+      "id": "small-font-size",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "span.domain (\"northstarfreight.io\")",
+      "message": "Computed font-size is 10px (minimum legible size is 12px)."
+    },
+    {
+      "id": "low-contrast",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "span.domain (\"northstarfreight.io\")",
+      "message": "Text contrast ratio is 1.90:1 (requires at least 4.5:1 for WCAG AA)."
+    },
+    {
+      "id": "small-font-size",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "span#statusBadge.status-badge (\"• Researching\")",
+      "message": "Computed font-size is 10px (minimum legible size is 12px)."
+    },
+    {
+      "id": "overlapping-or-clipped-text",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "div.row (\"Dana Whitfield joined as VP Operatio\")",
+      "message": "Text is horizontally clipped (369px content inside 180px box without ellipsis)."
+    },
+    {
+      "id": "small-font-size",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "span (\"Dana Whitfield joined as VP Operatio\")",
+      "message": "Computed font-size is 10px (minimum legible size is 12px)."
+    },
+    {
+      "id": "small-font-size",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "span.row-source (\"linkedin.com\")",
+      "message": "Computed font-size is 9px (minimum legible size is 12px)."
+    },
+    {
+      "id": "low-contrast",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "span.row-source (\"linkedin.com\")",
+      "message": "Text contrast ratio is 1.65:1 (requires at least 4.5:1 for WCAG AA)."
+    },
+    {
+      "id": "overlapping-or-clipped-text",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "div.row (\"Opening an Atlanta regional office t\")",
+      "message": "Text is horizontally clipped (443px content inside 180px box without ellipsis)."
+    },
+    {
+      "id": "small-font-size",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "span (\"Opening an Atlanta regional office t\")",
+      "message": "Computed font-size is 10px (minimum legible size is 12px)."
+    },
+    {
+      "id": "small-font-size",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "span.row-source (\"supplychaindive.com\")",
+      "message": "Computed font-size is 9px (minimum legible size is 12px)."
+    },
+    {
+      "id": "low-contrast",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "span.row-source (\"supplychaindive.com\")",
+      "message": "Text contrast ratio is 1.65:1 (requires at least 4.5:1 for WCAG AA)."
+    },
+    {
+      "id": "overlapping-or-clipped-text",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "div.row (\"Raised a $48M Series B led by Forge \")",
+      "message": "Text is horizontally clipped (459px content inside 180px box without ellipsis)."
+    },
+    {
+      "id": "low-contrast",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "span.row-source (\"freightwaves.com\")",
+      "message": "Text contrast ratio is 1.65:1 (requires at least 4.5:1 for WCAG AA)."
+    },
+    {
+      "id": "overlapping-or-clipped-text",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "div.row (\"Ships temperature-controlled loads f\")",
+      "message": "Text is horizontally clipped (473px content inside 180px box without ellipsis)."
+    },
+    {
+      "id": "low-contrast",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "span.row-source (\"northstarfreight.io\")",
+      "message": "Text contrast ratio is 1.65:1 (requires at least 4.5:1 for WCAG AA)."
+    },
+    {
+      "id": "overlapping-or-clipped-text",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "div.row (\"Founded 2016 in Columbus, Ohio · 380\")",
+      "message": "Text is horizontally clipped (378px content inside 180px box without ellipsis)."
+    },
+    {
+      "id": "low-contrast",
+      "severity": "must-fix",
+      "viewport": "desktop",
+      "element": "span.row-source (\"linkedin.com\")",
+      "message": "Text contrast ratio is 1.65:1 (requires at least 4.5:1 for WCAG AA)."
+    },
+    {
+      "id": "missing-states",
+      "severity": "should-fix",
+      "viewport": "desktop",
+      "element": "main.card (\"Northstar Freight northstarfreight.i\")",
+      "message": "Data region is missing declared loading/empty/error state handling (provide [data-state] slots, templates, or data-states=\"loading,empty,error\")."
+    }
+  ]
+}
