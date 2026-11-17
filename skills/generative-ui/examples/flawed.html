@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Northstar Freight Research Brief (Flawed Demo)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #f3f2ee;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #111827;
+      padding: 4px 2px;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 8px 4px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .title-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .domain {
+      color: #b8bcc4;
+      font-weight: 400;
+      font-size: 10px;
+    }
+    .status-badge {
+      font-size: 10px;
+      color: #2563eb;
+    }
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      font-size: 10px;
+      height: 14px;
+      width: 180px;
+      overflow: hidden;
+      white-space: nowrap;
+      background: #fdf8ef;
+    }
+    .row-source {
+      color: #c0c4cc;
+      font-family: monospace;
+      font-size: 9px;
+    }
+    .chips-bar {
+      display: flex;
+      gap: 8px;
+      width: 540px;
+      margin-top: 8px;
+      padding: 6px 0;
+    }
+    .chip {
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      padding: 2px 6px;
+      font-size: 10px;
+      color: #9ca3af;
+    }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid #f3f4f6;
+      font-size: 10px;
+      color: #b0b5bd;
+    }
+    .btn-small {
+      height: 22px;
+      padding: 2px 6px;
+      font-size: 10px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .composer {
+      max-width: 640px;
+      margin: 8px auto 0;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <main class="card" data-stream="research-card">
+    <div class="header">
+      <div class="title-group" id="titleGroup">
+        <span>Northstar Freight</span>
+        <span class="domain">northstarfreight.io</span>
+      </div>
+      <span class="status-badge" id="statusBadge">• Researching</span>
+    </div>
+
+    <div class="timeline" id="timeline">
+      <div class="row">
+        <span>Freight brokerage for mid-size cold-chain shippers across Midwest corridors and port terminals</span>
+        <span class="row-source">northstarfreight.io</span>
+      </div>
+    </div>
+
+    <div class="chips-bar" id="chipsBar">
+      <span class="chip">Company checking</span>
+      <span class="chip">Funding queued</span>
+      <span class="chip">News checking</span>
+      <span class="chip">People queued</span>
+    </div>
+
+    <div class="footer">
+      <span id="progressText">Reading linkedin.com · 2 of 11 sources</span>
+      <button class="btn-small" type="button">Email me</button>
+    </div>
+  </main>
+
+  <div class="composer">
+    <span style="font-size: 10px; color: #b8bcc4;">Ask anything, or type / for skills</span>
+    <button class="btn-small" type="button">Send</button>
+  </div>
+
+  <script>
+    const logo = document.createElement("img");
+    logo.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><rect width='16' height='16' rx='4' fill='%232563eb'/></svg>";
+    logo.width = 16;
+    logo.height = 16;
+    document.getElementById("titleGroup").prepend(logo);
+
+    const incoming = [
+      { text: "Founded 2016 in Columbus, Ohio · 380 employees across 4 hubs", src: "linkedin.com", delay: 180 },
+      { text: "Ships temperature-controlled loads for Haverford Foods and Ostrander Steel", src: "northstarfreight.io", delay: 380 },
+      { text: "Raised a $48M Series B led by Forge Ventures to expand automated dispatch", src: "freightwaves.com", delay: 580 },
+      { text: "Opening an Atlanta regional office to cover Southeast cold-chain lanes", src: "supplychaindive.com", delay: 780 },
+      { text: "Dana Whitfield joined as VP Operations after 8 years at Convoy", src: "linkedin.com", delay: 980 }
+    ];
+
+    const timeline = document.getElementById("timeline");
+    incoming.forEach((item) => {
+      setTimeout(() => {
+        const div = document.createElement("div");
+        div.className = "row";
+        div.style.height = "64px";
+        div.style.marginBottom = "12px";
+        div.innerHTML = `<span>${item.text}</span><span class="row-source">${item.src}</span>`;
+        timeline.prepend(div);
+      }, item.delay);
+    });
+  </script>
+</body>
+</html>
