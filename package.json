@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p skills/dori-mode/scripts/tsconfig.json",
     "lint:loc": "bun scripts/check-loc.ts",
     "knip": "knip",
-    "test": "bun test ./test/",
+    "test": "bun test ./test/ ./skills/agent-link/",
     "test:skill": "cd skills/dori-mode/scripts && bun test",
     "ci": "bun run check && bun run typecheck && bun run knip && bun run lint:loc && bun run test && bun run test:skill"
   },

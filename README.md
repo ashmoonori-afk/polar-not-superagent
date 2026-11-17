@@ -2,7 +2,7 @@
 
 Polar's fork of [sisyphuslabs/dori-superagent](https://github.com/sisyphuslabs/dori-superagent): not a new superagent, but a record of how one working agent harness uses Dori.
 
-This is a modified fork of upstream at `49fba4d`. The upstream README is preserved as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (German, Italian, Japanese, Chinese) are upstream's own. The fork adds this page, [SETUP.md](SETUP.md), the setup scripts in [polar/](polar/), the pages in [docs/polar/](docs/polar/), the examples in [examples/polar/](examples/polar/), the fourteen extra skills in [skills/](#skills) and the reference picture below. [SYNC-1116.md](SYNC-1116.md) records the full 57-commit review and staged delivery.
+This is a modified fork of upstream at `49fba4d`. The upstream README is preserved as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (German, Italian, Japanese, Chinese) are upstream's own. The fork adds this page, [SETUP.md](SETUP.md), the setup scripts in [polar/](polar/), the pages in [docs/polar/](docs/polar/), the examples in [examples/polar/](examples/polar/), the fifteen extra skills in [skills/](#skills) and the reference picture below. [SYNC-1116.md](SYNC-1116.md) records the full 57-commit review and staged delivery.
 
 ## Set up your assistant
 
@@ -36,7 +36,7 @@ Model roles, per-model context compaction, how omo builds each model's prompt, a
 
 ## Skills
 
-Besides `dori-mode`, [skills/](skills/) carries the fourteen skills the reference setup uses day to day. To load them, clone the repo and link the folders into the directory your agent reads skills from (`~/.agents/skills` here; use your agent's own folder if it differs):
+Besides `dori-mode`, [skills/](skills/) carries the fifteen skills the reference setup uses day to day. To load them, clone the repo and link the folders into the directory your agent reads skills from (`~/.agents/skills` here; use your agent's own folder if it differs):
 
 ```bash
 git clone https://github.com/ashmoonori-afk/polar-not-superagent.git && cd polar-not-superagent
@@ -46,6 +46,7 @@ for d in skills/*/; do ln -sfn "$PWD/${d%/}" ~/.agents/skills/"$(basename "$d")"
 
 | Skill | Use it to | Source |
 |---|---|---|
+| [agent-link](skills/agent-link/) | connect a closed external agent (phone or app agent, hosted bot) to the lead through a per-agent HTTPS mailbox, with onboarding, protocol, recovery and restart checks | written here, from a working link built on changeroa/agent-mailbox (MIT) |
 | [design-taste](skills/design-taste/) | research references, plan art direction and critique a page before and after it is built | adapted from four projects (Apache-2.0 and MIT) |
 | [desktop-evidence](skills/desktop-evidence/) | judge what a desktop-automation result or test run actually proves | written here |
 | [dimensional-drawing](skills/dimensional-drawing/) | draw a UI component as a monochrome dimensional spec sheet | enesozturk/dimensional-drawing (MIT) |
