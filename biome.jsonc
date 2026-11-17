@@ -7,7 +7,26 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!**/fixtures", "!**/*.md", "!docs/**/*.svg"]
+    "includes": [
+      "**",
+      "!**/fixtures",
+      "!**/*.md",
+      "!docs/**/*.svg",
+      // Bundled skills keep their own (mostly upstream) formatting; only dori-mode follows this config.
+      "!skills/design-taste",
+      "!skills/desktop-evidence",
+      "!skills/dimensional-drawing",
+      "!skills/dimensional-drawing-motion",
+      "!skills/figma-designer",
+      "!skills/generative-ui",
+      "!skills/hyperframes",
+      "!skills/ponytail",
+      "!skills/security-audit",
+      "!skills/stack-diagram",
+      "!skills/ui-ux-guardrails",
+      "!skills/video-use",
+      "!skills/writing"
+    ]
   },
   "formatter": {
     "enabled": true,

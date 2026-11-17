@@ -1,0 +1,4 @@
+figma-designer
+
+Adapted from elayadesign/ai-design-skills (skills/figma-designer/SKILL.md, commit 456d9e0d3e2d84c748bb143c6ca3d90c45e16213, MIT License, Copyright (c) 2026 Elaya).
+Changed: prototype motion durations and one-motion-per-screen rule reconciled with the motion rule in design-taste/SKILL.md (200-300ms layout, 100-200ms feedback); hero text gradient and tagline reveal made plan-dependent to match design-taste/references/tells.md; landing-page section routed to design-taste/references/landing-page.md.
