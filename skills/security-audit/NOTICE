@@ -1,0 +1,10 @@
+security-audit
+
+Repository: https://github.com/cloudflare/security-audit-skill
+Commit: c1c8a8c1471069fb0e188eeaff69b8e8db6564a8
+License: MIT, Copyright (c) 2025-2026 Cloudflare, Inc.
+
+SKILL.md is a shortened adaptation. Companion .md files, report-schema.json and both validator
+scripts are copied unchanged. The validator test files are left out. Added: scoped audit mode, omo
+tool mapping, output path, rule against publishing findings. The validators were read before use:
+they require only fs, path and util.
