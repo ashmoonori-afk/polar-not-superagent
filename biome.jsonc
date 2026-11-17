@@ -13,6 +13,7 @@
       "!**/*.md",
       "!docs/**/*.svg",
       // Bundled skills keep their own (mostly upstream) formatting; only dori-mode follows this config.
+      "!skills/bookforge",
       "!skills/design-taste",
       "!skills/desktop-evidence",
       "!skills/dimensional-drawing",
