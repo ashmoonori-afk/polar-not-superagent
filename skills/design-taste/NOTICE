@@ -1,0 +1,40 @@
+design-taste
+
+Short adapted skill that merges ideas and condensed text from four projects.
+
+1. Impeccable
+   Repository: https://github.com/pbakaus/impeccable
+   Commit: 2f97a85a4a87a80066a693bd3546b092bd300772
+   License: Apache License 2.0, Copyright 2025 Paul Bakaus
+   Used: the mode concept, parts of critique, audit, polish and bolder, condensed and rewritten.
+   Changed: all CLI, detector, hook, live-mode and binary-engine use removed. Upstream's NOTICE.md
+   covers its iOS and Android references; those files are not included here.
+
+2. taste-skill
+   Repository: https://github.com/Leonxlnx/taste-skill
+   Commit: 12af471f627f866411b4bd785b19646d3672784c
+   License: MIT, Copyright (c) 2026 Leonxlnx
+   Used: critique passes, score, caps, tell registry, subject inventory, idea sentence, competitor test.
+   Changed: scripts, library data, scene assets and the direction draw are not included. Upstream's
+   required entrance on every section and minimum moving-element count are removed for this
+   skill's motion rule. Placing found archive pictures is narrowed by this skill's image rule.
+
+3. ai-design-skills (landing-page-design)
+   Repository: https://github.com/elayadesign/ai-design-skills
+   Commit: 456d9e0d3e2d84c748bb143c6ca3d90c45e16213
+   License: MIT, Copyright (c) 2026 Elaya
+   Used: landing-page conversion intake and structure, layout archetypes, copy rules, Tailwind scale
+   snapping, 26 named text styles, spacing scale, nested radius formula, state and ship checklists
+   (in references/landing-page.md).
+   Changed: reconciled with tells.md and this skill's motion rule (dropped mandatory hero text gradient,
+   floating blurred nav, every-section scroll reveal and 500-800ms durations; tagline word-by-word reveal
+   is optional when chosen as a screen's one main motion).
+
+4. redesign-skill (redesign-existing-projects)
+   Repository: https://github.com/elayadesign/redesign-skill
+   Commit: 7df13f6a289f4a7f91c5fe3efd70f51fd584ec28
+   License: MIT, Copyright (c) 2026 Elaya
+   Used: diagnostic audit items for off-scale typography, tabular-nums, 100dvh and single-hue shadow tinting.
+
+Added here: research and plan commands, the skill-routing table, the browser check notes.
+The full license texts are in LICENSE. These files were modified from the originals.
