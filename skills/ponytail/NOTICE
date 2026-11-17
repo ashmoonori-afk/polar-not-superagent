@@ -1,0 +1,17 @@
+ponytail
+
+Repository: https://github.com/DietrichGebert/ponytail
+Commit: 96608e078b2d5ea607c5c3b8b5a54d1c1fba6846
+License: MIT, Copyright (c) 2026 DietrichGebert
+
+SKILL.md is a modified adaptation of skills/ponytail/SKILL.md. Hooks, status band, board, slash
+commands and companion skills are not included. Added: the "Risky logic keeps its tests" section,
+which outranks the size rules, and labels on upstream's numbers.
+
+Our own check, 2026-11-01: one fixed Python task, three runs per arm, claude-haiku-5-5, medians.
+Without: 39 source lines added, 33 test lines, 5 tests, 8,375 output tokens, 13 turns.
+With: 25 source lines added, 28 test lines, 5 tests, 8,242 output tokens, 6 turns.
+Hidden acceptance test: 9 of 9 in every run of both arms. One extra run was given the skill but
+never read it, so it is excluded; it still wrote the smallest change (21 lines), which shows run
+to run variation is large. This is a small sample on one task, so treat it as a direction and not
+a measured rate.
