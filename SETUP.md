@@ -76,7 +76,7 @@ When {user} hands over a repository URL:
 3. Install agent-messenger (github: agent-messenger/agent-messenger). Read which platforms it supports, ask {user} which one they want (for example Telegram or Discord), and wait for their answer.
 4. Complete every login yourself in the browser.
 5. Create the bot with agent-messenger and finish its whole setup.
-6. Set the bot's display name to the saved {assistant} name from step 1; do not choose a second name. If the platform restricts account handles, use a valid handle while keeping that display name. Find a fitting profile picture online that you are allowed to use, and set it as the bot's avatar.
+6. Set the bot's display name to the saved {assistant} name from step 1; do not choose a second name. If the platform restricts account handles, use a valid handle while keeping that display name. Then give the bot a profile picture that fits that name: make one with an image tool you have, or find one online whose license allows this use. Do not use photos of real people or other people's logos or characters. Set it as the bot's avatar, show it to {user}, and change it if they ask. If the platform does not let you set it, send {user} the file and the exact steps.
 7. Greet {user} through the bot before anything else.
 8. NEVER send a new message through agent-discord or any other tool that posts as {user}'s own account. Every message goes out as the bot, and only as the bot.
 
