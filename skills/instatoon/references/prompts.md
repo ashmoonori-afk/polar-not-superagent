@@ -15,7 +15,8 @@ Page plan:
 - paper: warm off-white with a fine paper grain, no white, no gradient banner
 - narration (top band, centred, light hand lettering, at most 2 lines): "<narration>"
 - framing: <full | big | close>, character on the <left | right | centre>, cut by the bottom edge if big or close
-- scene: <what happens>; prop: <phone screen / memo / sign> showing "<exact prop text>"
+- scene: <what happens>; text prop: <phone screen / memo / sign> showing "<exact prop text>"
+- topic props (from the prop set, in the prop sheet's look): <id: held | beside | hero, size s | m | hero, where>
 - balloon(s): <round, wobbly outline, tail to the speaker; character's balloon in its signature colour> "<text>"
 - shout (if any): <jagged yellow burst> "<one or two words>"
 - emotion marks (at most 2, around the head): <sweat drop / sparkle / shock lines / question mark / heart>
@@ -29,6 +30,7 @@ Leave out everything on the style lock's "no" list.
 ```
 Make page <N> of the same carousel, <canvas>.
 Image 1 is the character: copy its looks exactly.
+Image 3 (when the page has props) is the prop sheet: copy each prop's shape, line and colours.
 Image 2 is the approved page <anchor N>: match its paper and grain, its narration lettering, its balloon
 shapes, outline weight and fills, and its palette. Do not copy image 2's text, scene or framing.
 
@@ -40,11 +42,31 @@ Page plan:
 - framing: <full | big | close>, side <left | right | centre> (different from page <N-1>)
 - narration: "<narration>"
 - scene and prop: <description>, prop text "<exact text>"
+- topic props: <id: held | beside | hero, size, where>; draw them exactly as in the prop sheet (image 3)
 - balloon(s): "<text>" (speaker: <character | other>)
 ```
 
 For the cover, add: "No narration. A small dark pill tag at the top reading \"<series>\". The title in heavy hand lettering over 2-3 lines fills the top 25-40% of the page: \"<title>\". The character is big or close below it, reacting."
 For a two-sided comparison, add: "Split the scene in two halves with the same character in both: left <A>, right <B>; one balloon per half."
+
+## D. Prop sheet
+
+```
+Draw a prop sheet for an Instagram comic, 1080x1350, on the style lock's paper.
+Attached image 1 is the character; images 2-N are reference photos of the real objects (for shape only;
+do not copy their colours, logos or photo look).
+
+<STYLE LOCK block>
+
+Draw each of these objects once, spaced out, as simple hand-drawn props in the character's own style:
+same line colour <line> at the same weight as the character's outline, slight wobble, round joins,
+flat pale fills only from: <palette fills>. No shading, no gradients, no letters, no logos.
+Show the character small in one corner for scale.
+- <id>: <object>, about <scale against the character>, <the one detail that makes it recognisable>
+- ...
+```
+
+Check the sheet: one line weight, colours from the palette, each object recognisable at 390 px wide, true proportions against the references. Repair one prop at a time with R8.
 
 ## C. Text-free page for the overlay route
 
@@ -105,4 +127,12 @@ Image 1 is the character; image 2 is the page to fix.
 Redraw the character in a <full | big | close> framing on the <left | right | centre>, so it covers at
 least 40% of the page height<, cut by the bottom edge>. Keep the narration, balloons, props and their text
 where they are, and keep them off the face.
+```
+
+**R8 Prop drift or off-style prop**
+```
+Image 1 is the prop sheet; image 2 is the page to fix.
+Redraw only the <prop> in image 2 so its shape, line colour and weight, and fills match image 1.
+<Remove the pasted photo or screenshot and draw it as a prop instead. | Move it off the face, to <cell>.>
+Keep the character, the text, the balloons and everything else.
 ```
