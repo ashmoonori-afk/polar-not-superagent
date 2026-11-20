@@ -1,7 +1,7 @@
 ---
 name: instatoon
-description: "Make a Korean Instagram carousel comic (instatoon) from one character image and a topic: a story-first page plan, a locked palette, hand-lettered type and framing rules, an anchor page, then every page as its own image, with a repair loop and a pre-post check. Use when asked for an instatoon, an Instagram comic or carousel with a character, or to fix pages of one."
-version: "0.2.0"
+description: "Make a Korean Instagram carousel comic (instatoon) from one character image and a topic: a story-first page plan, the topic's own objects drawn as props in the character's style, a locked palette, hand-lettered type and framing rules, an anchor page, then every page as its own image, with a repair loop, a plan checker and a pre-post check. Use when asked for an instatoon, an Instagram comic or carousel with a character, or to fix pages of one."
+version: "0.3.0"
 ---
 
 # Instatoon
@@ -9,11 +9,12 @@ version: "0.2.0"
 An instatoon is a short carousel comic: a cover that hooks, a few scene pages, one closing page. Each page is its own image and the same character carries the story. Two things decide whether it looks like a comic or like a slide deck:
 
 1. **It is told as scenes.** Every page is a moment: a one-line narration, the character reacting at a real size, and short hand-lettered balloons. Facts live inside things the character holds or looks at (a phone screen, a memo, a sign), never in a big white info box.
-2. **It stays alike.** Same character, same paper, same lettering, same balloon style on every page, while the framing changes from page to page.
+2. **The topic is drawn, not only the character.** The objects the topic is about (for a post on asking AI with photos: the error window, the phone, the camera, the receipt, the menu) appear as drawings in the character's own line and colour, held by the character or standing on their own. A reader should guess the topic from the pictures before reading a word.
+3. **It stays alike.** Same character, same paper, same lettering, same balloon style, same prop drawing style on every page, while the framing changes from page to page.
 
-This skill gets there by writing the decisions down once (the **character card**, the **page plan** and the **style lock**), drawing one page as the **anchor**, and making every other page from those three plus the anchor.
+This skill gets there by writing the decisions down once (the **character card**, the **page plan** with its **prop set**, and the **style lock**), drawing one page as the **anchor**, and making every other page from those plus the anchor.
 
-Prompt blocks and repair recipes: `references/prompts.md`. Page geometry and the measured checks: `references/layout.md`.
+Prompt blocks and repair recipes: `references/prompts.md`. Page geometry, prop boxes and the measured checks: `references/layout.md`. Plan checker: `scripts/check-spec.mjs`.
 
 ## What you need
 
@@ -64,15 +65,15 @@ Rules:
 
 Write the plan as a table before any image. The default nine pages follow a small story arc:
 
-| # | Role | Narration (top band) | Scene and framing | Balloons and props |
-|---|---|---|---|---|
-| 1 | Cover | none: series tag + title | character big or close-up, reacting to the problem | title 2-3 lines; optional one emotion mark |
-| 2 | Setup | the everyday moment | the problem appears (big) | one shout or reaction balloon; the problem as a prop |
-| 3 | Stuck | why it is hard | character stuck (full) | one or two balloons, a second voice allowed |
-| 4 | Turn | the one idea of the post | character lights up (big), colour field allowed | one shout ("찰칵!") plus one line |
-| 5-7 | Body | "1. ...", "2. ...", "3. ..." | one tip per page, framing alternates | the exact words or numbers inside a prop; one balloon reacting |
-| 8 | Caution | the one thing to watch | close-up, worried | the caution inside a memo |
-| 9 | Close | short wrap-up | character waving (full) | checklist memo, one balloon, "- 끝 -" or the closing action |
+| # | Role | Narration (top band) | Scene and framing | Balloons | Topic props |
+|---|---|---|---|---|---|
+| 1 | Cover | none: series tag + title | character big or close-up, reacting to the problem | title 2-3 lines; optional one emotion mark | the problem object beside the character |
+| 2 | Setup | the everyday moment | the problem appears (big) | one shout or reaction balloon | the problem object, large |
+| 3 | Stuck | why it is hard | character stuck (full) | one or two balloons, a second voice allowed | the problem object again, small |
+| 4 | Turn | the one idea of the post | character lights up (big), colour field allowed | one shout ("찰칵!") plus one line | the tool or action object |
+| 5-7 | Body | "1. ...", "2. ...", "3. ..." | one tip per page, framing alternates | one balloon reacting | the tip's own object; exact words or numbers inside a text prop |
+| 8 | Caution | the one thing to watch | close-up, worried | none or one | the caution inside a memo, plus the object it is about |
+| 9 | Close | short wrap-up | character waving (full) | one balloon, "- 끝 -" or the closing action | checklist memo, one small prop from the set |
 
 Rules:
 - One idea per page. If an idea needs two pages, split it and move the count, and say why in one line.
@@ -81,6 +82,35 @@ Rules:
 - Text budget per page: narration at most 2 lines of 20 Korean characters; at most 3 balloons of at most 12 characters per line; anything longer goes into a prop.
 - Exact prompts, numbers and steps the reader should copy go inside a prop (a phone chat bubble, a memo, a screen), word for word.
 - The user's own name for the character, or none, appears on the page. The skill's name never does.
+
+### Prop set
+
+Before the table is final, pick the topic's props and write them as a list: id, Korean name, and one line on why it belongs to this topic.
+
+```
+PROP SET
+error   | 오류 창        | the problem the story starts from
+phone   | 휴대폰         | the tool the reader uses
+camera  | 카메라         | the turn: a photo instead of words
+receipt | 영수증         | what tip 2 is about
+menu    | 외국어 메뉴판  | what tip 3 is about
+idcard  | 가린 신분증 사진 | the caution: hide personal details
+```
+
+How to pick them:
+- **3-6 props per post**, each a concrete object a reader can picture (a phone, a receipt), never an abstract idea (efficiency, safety) or a logo.
+- Take one from each part of the story: the **problem** (setup), the **tool or action** (turn), **one per tip** if the tip has its own object, and the **caution**. If more than 6 qualify, drop the ones that only repeat a meaning; if fewer than 3, look at what the character would hold, open, see or send in each scene.
+- Each prop keeps one meaning and one look for the whole post. The same phone is the same phone on every page.
+- No brand marks, real product shapes that identify a maker, stock photos or screenshots. When the topic needs a real screen (an error, a chat), **redraw** it in the prop style: window frame, a symbol, grey lines for unreadable text, and only the words the page needs.
+
+Where they go (counts are checked by `scripts/check-spec.mjs`):
+- At least **1 prop on the cover** and on **at least 75% of the other pages** (6 of 8 in a nine-page post).
+- **At most 3 props per page**, counting text props (phone screen, memo, error window) that carry a prop id. A plain memo with no topic object behind it does not count.
+- Every prop in the set is drawn at least once; nothing outside the set is drawn as a prop.
+- A prop is either **held** (it touches the lower half of the character, as if held or used), **beside** the character (in a free part of the scene), or the **hero** of the page (see below).
+- A **hero-prop page** makes the object the subject: the prop is drawn large (at least 40% of the page height) and the character may shrink to the `small` framing beside it. At most 2 hero-prop pages per post, never the cover.
+
+Put the prop id in the plan table's prop column for each page.
 
 If the user asked to see the plan first, stop here. Otherwise go on.
 
@@ -143,8 +173,21 @@ Three framings, every post uses all three:
 | full | about 50% of the page | whole body, feet on a soft floor shadow, left or right |
 | big | about 65% of the image height, cut by the bottom edge | head and chest, left or right |
 | close | head fills the page width, cut by the bottom edge | face only, centred |
+| small | about 34% of the page | whole body beside a hero prop; only on a hero-prop page |
 
-Rules: the character's visible part covers at least 40% of the page height on every scene page; the cover uses big or close; two pages in a row never share both framing and side.
+Rules: the character's visible part covers at least 40% of the page height on every scene page except a hero-prop page; the cover uses big or close; full, big and close all appear; two pages in a row never share both framing and side. Big and close leave little room beside the face, so put `m` and larger props on full or small pages and keep big and close pages to `s` or `m` props in the free corners.
+
+### Props
+
+Props are drawn by the same hand as the character, so they never look pasted in:
+
+- **Line**: the style lock's `line` colour at 4-6 px on the 1080 px page, the same weight at every size (draw small props with the same pen, do not shrink the lines), round joins, the same slight wobble as the balloons.
+- **Fill**: flat pale colours taken from the character (its accent colour, cheek pink, fur or skin tone) plus the lock's `shout` yellow and `other` card colour. No gradients, no shading, no new colours; check every prop colour against the palette.
+- **Shape**: simple and rounded, at most about 12 parts (a camera is body, top, lens rings, flash, button), proportions true to the real object (a phone is taller than wide, a receipt has a torn edge). For a real-world object, look at real reference photos of it first and draw from them; the photos are inputs only and never go on a page.
+- **Scale**: say the prop's real size against the character in the plan ("phone about the size of its head"). A held prop keeps that scale; a beside or hero prop may be drawn larger, like a close-up insert.
+- **Size classes** (longest side on the 1080 x 1350 page): `s` 150-299 px, `m` 300-599 px, `hero` 540-960 px and at least 40% of the page height. Smaller than 150 px reads as clutter; use an emotion mark or nothing.
+- **Placement**: in the scene below the narration band, at least 20 px inside the page, never over the character's face box (layout.md), never under a balloon, narration or title. Use the scene grid in `references/layout.md` to find free cells.
+- **Text**: a drawn prop carries no letters. Words a prop must show (a chat message, an error title) go into a text prop (phone screen, error window, memo), which is also drawn in this style.
 
 ### Emotion marks
 
@@ -162,12 +205,16 @@ title: <face> 130-170px | narration: <face> 50-56px | balloon: <face> 56-64px, p
 balloons: round, wobble outline, tail to speaker; character=mine, others=other; shout=jagged shout
 framing: full / big / close, all three used; >=40% visible; no repeat of framing+side on consecutive pages
 marks: <=2 per page, matching the face; colour field on <=3 pages
-no: text boxes over the face, rectangles for speech, random sparkles, frames, page numbers
+props: <ids from the prop set>; line #... 4-6px same pen; fills from the palette only; s 150-299 / m 300-599 / hero 540-960
+props per page <=3; cover >=1; >=75% of other pages >=1; hero pages <=2; never over the face or text
+no: text boxes over the face, rectangles for speech, random sparkles, frames, page numbers, stock photos, screenshots, logos
 ```
 
 ## Step 4: Anchor page
 
-Draw the setup page (page 2) before the cover. It fixes the narration style, the balloon style, the paper and the character's big framing, and it is the page every other page copies.
+First draw the **prop sheet**: every prop in the set on one plain page, in the style lock's line and fills, at their planned scale next to the character (block D in `references/prompts.md`). Check it against the prop rules and the reference photos; it is the look every page copies for its props.
+
+Then draw the setup page (page 2) before the cover. It fixes the narration style, the balloon style, the paper and the character's big framing, and it is the page every other page copies.
 
 Prompt it from the character card, the style lock and its plan row, with the character image as reference (block A in `references/prompts.md`). Inspect it (Step 6). Repeat until it passes. If the user wanted a check-in, show it now.
 
@@ -176,6 +223,7 @@ Prompt it from the character card, the style lock and its plan row, with the cha
 For each remaining page, cover included, give the generator:
 - the character image (looks),
 - the passed anchor page (paper, lettering, balloons, palette),
+- the prop sheet, when the page draws a prop,
 - the character card, the style lock and that page's plan row, written out in full each time (block B).
 
 Make one page per call. If the tool limits the number of images, say which pages are done and which are left.
@@ -194,12 +242,13 @@ Defects to look for:
 - text: typos, cut-off letters, text outside its balloon or prop, lines too small to read at 390 px wide, a balloon line over 12 characters,
 - layout: two text shapes touching, a balloon or prop over the face, text within 20 px of an edge,
 - content: missing or repeated points, wrong numbers, claims the user did not give,
-- framing: the character smaller than 40% of the page height, the same framing and side as the page before, a framing missing from the post,
+- framing: the character smaller than 40% of the page height (unless the page's hero is a prop), the same framing and side as the page before, a framing missing from the post,
+- props: a page that should carry a prop has none, a prop outside the set, a prop drawn with a different line weight or a colour off the palette, a photo or screenshot pasted in, a prop over the face or under text, the same prop looking different on two pages, a prop too small to recognise at 390 px,
 - palette: a new paper or ink colour; character blending into the paper; a colour field on more than 3 pages,
 - character: changed face, colours or proportions; features it never had; details from another image leaking in,
 - clutter: marks that do not match the face, more than 2 marks, random sparkles, frames, page numbers.
 
-Repair one defect per pass, with the page plus the anchor (and for character defects, the character image) attached, saying what to change and what to keep (recipes R1-R7). After two failed passes on the same text defect, switch that page to the overlay route.
+Repair one defect per pass, with the page plus the anchor (and for character defects, the character image; for prop defects, the prop sheet) attached, saying what to change and what to keep (recipes R1-R8). After two failed passes on the same text defect, switch that page to the overlay route.
 
 ## Step 7: Before posting
 
@@ -209,12 +258,14 @@ Repair one defect per pass, with the page plus the anchor (and for character def
 - [ ] The closing action names only what the account really gives, with the exact comment keyword if there is one.
 - [ ] Pages viewed side by side as thumbnails: one paper, one lettering set, one balloon style; framing visibly changes from page to page; all three framings present.
 - [ ] Same character on every page, nothing added.
+- [ ] `bun scripts/check-spec.mjs <plan.json>` prints PASS (page count, text budget, framing, prop counts).
+- [ ] The topic can be guessed from the thumbnails alone: the props from the set are visible on the cover and most pages, in the character's line and palette, none of them a photo or screenshot.
 - [ ] No text over the face, no clutter from the "no" list.
 
 Then hand over:
 - `page-01.png` ... `page-NN.png` in posting order,
 - `caption.txt`: 3-5 lines that retell the hook as a relatable moment, the takeaway and the closing action, then 5-10 topic hashtags (about 150-400 characters before the hashtags),
 - `alt.txt`: one plain Korean line per page describing the scene and its text, for Instagram's alt text,
-- the character card and style lock, so the next post with this character can reuse them.
+- the character card, style lock, prop set and prop sheet, so the next post with this character can reuse them.
 
 Reuse: a new post with the same character keeps the saved palette and faces unless the user changes them. A new character gets a new palette.
