@@ -13,15 +13,19 @@
     "fmt": "biome format --write .",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p skills/dori-mode/scripts/tsconfig.json",
     "lint:loc": "bun scripts/check-loc.ts",
+    "lint:ratchet": "bun scripts/test-hygiene/ratchet.ts",
+    "lint:ratchet:update": "bun scripts/test-hygiene/ratchet.ts --update",
     "knip": "knip",
-    "test": "bun test ./test/ ./skills/agent-link/",
+    "test": "bun test ./test/ ./skills/agent-link/ ./scripts/test-hygiene/",
     "test:skill": "cd skills/dori-mode/scripts && bun test",
-    "ci": "bun run check && bun run typecheck && bun run knip && bun run lint:loc && bun run test && bun run test:skill"
+    "ci": "bun run check && bun run typecheck && bun run knip && bun run lint:loc && bun run lint:ratchet && bun run test && bun run test:skill"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.6",
     "@types/bun": "^1.4.4",
     "knip": "^6.44.2",
+    "oxc-parser": "0.156.0",
+    "oxlint": "1.89.0",
     "typescript": "^5.9"
   },
   "engines": {
