@@ -9,7 +9,7 @@ import {
   symlinkSync,
   writeFileSync,
 } from "node:fs";
-import { tmpdir } from "node:os";
+import { constants, tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
 const bootstrap = resolve(import.meta.dir, "../polar/bootstrap.sh");
@@ -128,45 +128,33 @@ test.each([
   "terminal input %j saves only a completed answer (piped bootstrap: %j)",
   async (input, name, expectedCode, piped) => {
     const { home, config, env } = fixture();
-    const stdinFile = piped ? join(home, "script-input") : "";
+    const stdinFile = join(home, "script-input");
     if (piped) writeFileSync(stdinFile, readFileSync(bootstrap));
-    const child = Bun.spawn(
-      [
-        "python3",
-        "-c",
-        `
-import errno, os, pty, sys
-pid, fd = pty.fork()
-if pid == 0:
-    if sys.argv[3]:
-        source = os.open(sys.argv[3], os.O_RDONLY)
-        os.dup2(source, 0)
-        os.close(source)
-        os.execv("/bin/bash", ["bash", "-s", "--", "--no-autostart"])
-    os.execv("/bin/bash", ["bash", sys.argv[1]])
-output = b""
-while not output.endswith(b": "):
-    output += os.read(fd, 4096)
-os.write(fd, sys.argv[2].encode())
-try:
-    while os.read(fd, 4096):
-        pass
-except OSError as error:
-    if error.errno != errno.EIO:
-        raise
-os.close(fd)
-_, status = os.waitpid(pid, 0)
-code = os.waitstatus_to_exitcode(status)
-sys.exit(code if code >= 0 else 128 - code)
-`,
-        naming,
-        input,
-        stdinFile,
-      ],
-      { env, stdin: "ignore", stdout: "pipe", stderr: "pipe" },
-    );
-    const [code, err] = await Promise.all([child.exited, new Response(child.stderr).text()]);
-    expect({ code, err }).toEqual({ code: expectedCode, err: "" });
+    // Bun's own PTY is the controlling terminal, so /dev/tty reaches it; the answer is typed only once the
+    // prompt is on screen. The piped case keeps the script on stdin, as `curl ... | bash -s` does.
+    const argv = piped
+      ? ["/bin/bash", "-c", 'exec /bin/bash -s -- --no-autostart <"$0"', stdinFile]
+      : ["/bin/bash", naming];
+    const decoder = new TextDecoder();
+    let screen = "";
+    let answered = false;
+    const child = Bun.spawn(argv, {
+      env,
+      terminal: {
+        data(terminal, chunk) {
+          screen += decoder.decode(chunk, { stream: true });
+          if (answered || !screen.endsWith(": ")) return;
+          answered = true;
+          terminal.write(input);
+        },
+      },
+    });
+    await child.exited;
+    child.terminal?.close();
+    const signal = child.signalCode;
+    const code =
+      signal === null ? child.exitCode : 128 + (typeof signal === "number" ? signal : constants.signals[signal]);
+    expect({ code, answered }).toEqual({ code: expectedCode, answered: true });
     if (expectedCode === 0) {
       expect(readFileSync(join(config, "assistant-name"), "utf8")).toBe(`${name}\n`);
       if (piped) expect(readFileSync(join(home, "launch.txt"), "utf8")).toContain(name);
