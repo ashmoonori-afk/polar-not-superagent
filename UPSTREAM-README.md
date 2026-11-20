@@ -61,7 +61,7 @@ You need herdr, Bun 1.4.4 or newer, git, and the GitHub CLI `gh`.
 curl -fsSL https://raw.githubusercontent.com/sisyphuslabs/dori-superagent/main/install.sh | bash
 ```
 
-That clones this repository to `~/.dori/src`, links the skill into `~/.agents/skills/dori-mode`, links `dori` onto your PATH, and copies an example config to `~/.dori/config.json`. Edit at least `leadPane` (your own herdr pane, from `herdr pane current`), `laneWorkspace` and `defaultCwd`.
+That installs [Doriterm](https://doriterm.com) first when the machine has none (its host and herdr-core, through `get.doriterm.com`; a machine with any Doriterm host keeps it, and `DORI_NO_DORITERM=1` skips the step), then clones this repository to `~/.dori/src`, links the skill into `~/.agents/skills/dori-mode`, links `dori` onto your PATH, and copies an example config to `~/.dori/config.json`. Edit at least `leadPane` (your own herdr pane, from `herdr pane current`), `laneWorkspace` and `defaultCwd`.
 
 Then start your coding agent inside herdr and tell it: Dori mode. It asks what to call it (plain Dori, or ShipDori, WorkDori, so several can run side by side), asks which messenger, finishes the bot's creation and login with you, and greets you through the bot. Before it reads anything of yours it asks for permission tool by tool, and that onboarding is read-only.
 

@@ -1,4 +1,12 @@
-# Third-party notices for skills/
+# Third-party notices
+
+## Scripts
+
+| Component | Upstream | Version | Licence and copyright | Changes in this copy |
+|---|---|---|---|---|
+| Test hygiene rules | [interfere-inc/landmines](https://github.com/interfere-inc/landmines), via [sisyphuslabs/dori-superagent](https://github.com/sisyphuslabs/dori-superagent) | `0.1.0` | [MIT](https://github.com/interfere-inc/landmines/blob/main/LICENSE), Copyright (c) 2026 Interfere, Inc. | Reimplemented the sleep and flake-masking checks and the module-mocking portion of the test-double check; Polar tracks findings per file |
+
+## Skills
 
 The skills in `skills/` other than `dori-mode` are not covered by the repository's Sustainable Use License. Adapted skills keep their upstream licence and notice in their own folder (`LICENSE`, `NOTICE`). Skills marked "written here" were written for this project. Where one of them names an outside project, that project was read for ideas and none of its code was copied.
 

@@ -1,0 +1,13 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "plugins": [],
+  "categories": {
+    "correctness": "off"
+  },
+  "jsPlugins": ["./plugin.ts"],
+  "rules": {
+    "polar-tests/no-fixed-sleep": "error",
+    "polar-tests/no-flake-masking": "error",
+    "polar-tests/no-module-mock": "error"
+  }
+}
