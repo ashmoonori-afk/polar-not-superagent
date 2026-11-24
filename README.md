@@ -2,7 +2,7 @@
 
 Polar's fork of [sisyphuslabs/dori-superagent](https://github.com/sisyphuslabs/dori-superagent): not a new superagent, but a record of how one working agent harness uses Dori.
 
-This is a modified fork of upstream at `49fba4d`. The upstream README is preserved as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (German, Italian, Japanese, Chinese) are upstream's own. The fork adds this page, [SETUP.md](SETUP.md), the setup scripts in [polar/](polar/), the pages in [docs/polar/](docs/polar/), the examples in [examples/polar/](examples/polar/), the sixteen extra skills in [skills/](#skills) and the reference picture below. [SYNC-1116.md](SYNC-1116.md) records the full 57-commit review and staged delivery.
+This is a modified fork of upstream at `395149b`. The upstream README is preserved as [UPSTREAM-README.md](UPSTREAM-README.md), and the translated READMEs (German, Italian, Japanese, Chinese) are upstream's own. The fork adds this page, [SETUP.md](SETUP.md), the setup scripts in [polar/](polar/), the pages in [docs/polar/](docs/polar/), the examples in [examples/polar/](examples/polar/), the sixteen extra skills in [skills/](#skills) and the reference picture below. [SYNC-1116.md](SYNC-1116.md) records the full 57-commit review and staged delivery.
 
 ## Set up your assistant
 
@@ -121,6 +121,8 @@ These parts are ours and run around the Dori loop.
 - Previous sync: upstream `0691374` on 2026-11-09.
 - First 2026-11-16 sync: upstream through `c7aa18f`, retaining the fork's setup, neutral model examples and reference orchestration choices.
 - Final 2026-11-16 sync: upstream through `49fba4d`, including token-path security and completed-during-startup handling. All reviewed commits are accounted for in [SYNC-1116.md](SYNC-1116.md).
+- 2026-11-17 and 2026-11-20 syncs: Dori adopt, empty-flag and Slack bot-token fixes, the Doriterm install, upstream's gateway surface and its revert, and the test-hygiene ratchet rebuilt in the fork's own layout. See [SYNC-1117.md](SYNC-1117.md) and [SYNC-1120.md](SYNC-1120.md).
+- 2026-11-24 sync: upstream through `395149b` (Bun 1.4.5 and dependency updates), recorded in [SYNC-1124.md](SYNC-1124.md).
 - Since 2026-11-05 we read new upstream commits every evening and compare the useful ones with the tables above.
 - We have not contributed anything to the upstream repository yet.
 
