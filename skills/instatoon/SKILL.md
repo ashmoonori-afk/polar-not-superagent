@@ -151,7 +151,7 @@ Three faces, all hand-lettered Korean, each with one job:
 
 | Role | Face | Size at 1080 | Notes |
 |---|---|---|---|
-| Cover title | a heavy brush or marker hand (for example Yeon Sung) | 130-170 px, 2-3 lines, filling 25-40% of the page height | `ink`, one phrase in `accent` |
+| Cover title | a hand face picked per post (Yeon Sung, Gamja Flower, Single Day, Hi Melody, Nanum Pen, Dongle) | 130-170 px on a stacked cover, 100-135 px on a side, bottom or sticker cover; 2-3 lines | `ink`, one phrase in `accent`; thin faces need the top of the range, check the cover at thumbnail size |
 | Narration | a light, plain hand (for example Poor Story) | 50-56 px, line height 1.3 | centred, top band |
 | Balloons and props | a bold round hand (for example Gaegu Bold) | balloons 56-64 px, props 54-60 px | tighten letter spacing (about -0.08em for wide hand faces) |
 
@@ -175,7 +175,18 @@ Three framings, every post uses all three:
 | close | head fills the page width, cut by the bottom edge | face only, centred |
 | small | about 34% of the page | whole body beside a hero prop; only on a hero-prop page |
 
-Rules: the character's visible part covers at least 40% of the page height on every scene page except a hero-prop page; the cover uses big or close; full, big and close all appear; two pages in a row never share both framing and side. Big and close leave little room beside the face, so put `m` and larger props on full or small pages and keep big and close pages to `s` or `m` props in the free corners.
+Rules: the character's visible part covers at least 40% of the page height on every scene page except a hero-prop page; the cover uses big or close; full, big and close all appear; two pages in a row never share both framing and side (the side the reader sees, so a mirrored page counts on its new side). Big and close leave little room beside the face, so put `m` and larger props on full or small pages and keep big and close pages to `s` or `m` props in the free corners.
+
+### Variety across posts
+
+Owner feedback, 2026-11-26: "웹툰은 썸네일이 너무 겹친다. 생성할때 다양하게 바리에이션을 줘야함. 매번. 모든 이미지가 다 다르게". Ten posts in a row had used one cover (same pose, framing, side, glow, prop spot, title block, paper) and six shared the same page-by-page framing, and the feed read as one image. So every new post is planned against the last 6:
+
+- **Cover**: pick a layout (`stack` title on top, `left` / `right` title column beside the character, `bottom` title card with the character above it, `sticker` tilted note card), a palette (`cream`, `mint`, `peach`, `sky`, `butter`, `lilac`: paper plus background colour), a background (`plain`, `dots`, `grid`, `stripes`, `waves`, `rays`, `confetti`), a title face, the pose and expression the hook needs, framing, side, glow and marks. The cover must differ from each of the last 6 covers in at least 4 of these 10 and may not reuse any of their layout+palette pairs.
+- **Pages**: the same story beats may come back post after post, but not the same pictures in the same order. At most half of the non-cover pages may repeat the pose, framing and side of the same page in any of the last 6 posts. Change the side (`mirror: true` draws the page left-right mirrored, balloons and props included), the framing, or the pose when another pose says the same feeling (happy/front, pointing/laptop, surprised/blank, teary/blank).
+- **Camera**: `zoom` 0.85-1.15 moves the camera in or out, `charTilt` up to 8 degrees tilts the character, `lift` raises it (used with the bottom cover).
+- Inside one post the paper stays one colour; the background and glow may change from page to page.
+
+`scripts/check-spec.mjs <plan.json> --previous <the last 6 plans>` refuses a plan that breaks these. After drawing, the cover image itself is compared with the last 6 posted covers (a 16x16 difference hash for placement plus a 6x6 mean colour): a cover that is close on both is refused.
 
 ### Props
 
@@ -258,7 +269,8 @@ Repair one defect per pass, with the page plus the anchor (and for character def
 - [ ] The closing action names only what the account really gives, with the exact comment keyword if there is one.
 - [ ] Pages viewed side by side as thumbnails: one paper, one lettering set, one balloon style; framing visibly changes from page to page; all three framings present.
 - [ ] Same character on every page, nothing added.
-- [ ] `bun scripts/check-spec.mjs <plan.json>` prints PASS (page count, text budget, framing, prop counts).
+- [ ] `bun scripts/check-spec.mjs <plan.json> --previous <last 6 plans>` prints PASS (page count, text budget, framing, prop counts, variety against the last 6 posts).
+- [ ] The new cover set beside the last 6 covers as thumbnails: it does not look like any of them (layout, colour, pose).
 - [ ] The topic can be guessed from the thumbnails alone: the props from the set are visible on the cover and most pages, in the character's line and palette, none of them a photo or screenshot.
 - [ ] No text over the face, no clutter from the "no" list.
 
@@ -268,4 +280,4 @@ Then hand over:
 - `alt.txt`: one plain Korean line per page describing the scene and its text, for Instagram's alt text,
 - the character card, style lock, prop set and prop sheet, so the next post with this character can reuse them.
 
-Reuse: a new post with the same character keeps the saved palette and faces unless the user changes them. A new character gets a new palette.
+Reuse: a new post with the same character keeps the character, the line, the balloon and narration faces and the prop look. The cover layout, palette, background, title face and page framing change from post to post (Variety across posts). A new character gets a new palette set.
