@@ -26,6 +26,13 @@ Lessons:
 - A link must fail loudly. The restart-safe setup below re-creates the boxes
   on every start, and the checklist proves one round trip before anyone
   trusts the link again.
+- Re-creating and testing afterwards does not cover the window during a
+  failure or a startup. The gateway itself has to refuse to type into
+  anything that is not the mailbox program: run it with `MBX_HC` set to
+  [`scripts/box-guard.sh`](../scripts/box-guard.sh). The guard delivers only
+  while `box.sh BOX` is running and succeeds only once the line is in the box
+  log; otherwise the gateway answers `mailbox write failed` and `link.mjs
+  send` prints `MBX_UNCONFIRMED`.
 
 ## Restart-safe box terminals
 
@@ -57,7 +64,8 @@ WantedBy=herdr-core.service
 3. skip mirror names: the lead's mirror has no boxes of its own.
 
 Enable it with `systemctl --user enable agent-mailbox-boxes`. Prove it once
-by restarting the terminal host and running the round trip.
+by restarting the terminal host and running the round trip. Keep the guard
+in front of the terminal host whatever starts the boxes.
 
 ## After any restart (full checklist)
 
@@ -78,10 +86,13 @@ and the tunnel.
    2. update the gateway's public-origin setting (`MBX_BASE` in the
       reference) and restart the gateway;
    3. rewrite the URL board, then fetch the raw URL and compare;
-   4. send the agent one line with the new URL (its token stays valid).
-      If the old URL is dead, the agent finds the new one on the board.
-6. Lost lines: compare the lead's send history and the terminal screens with
-   the logs, and resend whatever is still needed.
+   4. add the new origin to the lead's `MBX_APPROVED_ORIGINS`;
+   5. have the owner confirm the new URL to the agent in their private chat.
+      The agent finds it on the board, but sends its token there only after
+      that confirmation.
+6. Unconfirmed lines: for every `MBX_UNCONFIRMED` id, check the inbox log
+   or ask the agent whether it arrived, then resend the rest with
+   `link.mjs send --id <id>`, so the agent cannot act twice on one id.
 
 Never restart a shared host just to test this. Restart only the units.
 
@@ -89,9 +100,11 @@ Never restart a shared host just to test this. Restart only the units.
 
 | Watcher prints | Likely cause | Do |
 |---|---|---|
-| `MBX_ERR ... fetch failed` or a timeout | host, WSL or tunnel down; URL changed | checklist above |
+| `MBX_ERR ... network error` or `timeout` | host, WSL or tunnel down; URL changed | checklist above |
+| `MBX_ERR ... not an approved origin` | the URL changed and the new origin is not approved | confirm the URL, add it to `MBX_APPROVED_ORIGINS` |
 | `MBX_ERR ... HTTP 401` | token revoked or wrong token in the store | re-issue (below) |
-| `MBX_ERR ... HTTP 5xx mailbox write failed` | box terminal down | run the boxes script |
+| `MBX_UNCONFIRMED ... HTTP 400` | the guard refused: a box is not running the mailbox program, or the line was not logged | run the boxes script; confirm the id with the agent before resending with `--id` |
+| `MBX_GAP` | more than 200 lines since the last read | read the missing range from `outbox-AGENT.log` on the host |
 | nothing for longer than two wake intervals after an instruction | the agent's schedule stopped, its quota ran out, or the box is a shell | check the inbox log for your line, then ask the owner to poke the agent |
 
 ## Re-issue or revoke a token

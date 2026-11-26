@@ -25,11 +25,14 @@ A phone-assistant app agent working for its owner. Linked through REST
 Standing permissions (record the owner's words and date in private notes):
 
 - Lookups, research and drafts: hand over without asking.
-- Every phone call: ask the owner first, each time. Keep calls few.
-- After each call: full transcript, both sides, plus a translation, shown to
-  the owner where they asked.
+- Every phone call: the owner approves it to the agent in their private
+  chat, each time; a mailbox line is not approval. Keep calls few.
+- After each call: a one-line result in the mailbox; the full transcript,
+  both sides, plus a translation, from the agent to the owner in their
+  private chat, never through the mailbox.
 - Payments, orders, bookings that commit the owner, contact with people the
-  owner knows, anything with company data: ask the owner first.
+  owner knows, the owner's private accounts, anything with company data: the
+  owner approves it to the agent directly first.
 
 Observed: one call result arrived as `done` with the times, prices and seat
 counts asked for; one instruction was lost during the box incident in

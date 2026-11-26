@@ -74,15 +74,25 @@ Do the steps in order; each ends with a check that must pass.
    empty pair that nobody reads.
    Then replace the box terminals with the restart-safe unit from
    [references/restart.md](references/restart.md) before anything else
-   depends on them.
+   depends on them, and restart the gateway with `MBX_HC` set to
+   [scripts/box-guard.sh](scripts/box-guard.sh) (`BOX_GUARD_HC` = the real
+   terminal host). The gateway delivers by typing into the box terminal; the
+   guard refuses unless that box is running the mailbox program, and reports
+   success only once the line is in the box log.
+   Check: with `inbox-AGENT` stopped, a send is refused
+   (`mailbox write failed`); with it running, the line lands in the log.
 4. **Issue two tokens:** one for the agent, one for the lead's mirror
    (`issue-token NAME` prints each once). Store both in the lead machine's
    secret store (macOS Keychain, `pass`, a 0600 file) straight from the
    command's output; never echo them, never pass them as a command-line
    argument, never paste them into a chat log or the mailbox.
    Check: `scripts/link.mjs whoami` with the mirror token names the mirror
-   and the swapped pair.
-5. **Expose it over HTTPS.** Choose by how long the link must live:
+   and the swapped pair. `link.mjs` sends the token only to an origin listed
+   in `MBX_APPROVED_ORIGINS`, over https (plain http only on loopback).
+5. **Expose it over HTTPS,** only once the guard check in step 3 passes:
+   without it, a box that came back as a shell would run whatever the gateway
+   types into it. Add the public origin to the lead's
+   `MBX_APPROVED_ORIGINS`. Choose by how long the link must live:
 
    | Option | Cost | URL survives restarts | Notes |
    |---|---|---|---|
@@ -120,9 +130,9 @@ Do the steps in order; each ends with a check that must pass.
 **Round trip** (run at setup and after every restart): the lead sends
 `ping <n>`; the line appears in `inbox-AGENT.log` on the host within a
 second (`tail -1`); the agent answers `done pong <n>` at its next wake; the
-watcher prints it. A `{"sent": ...}` reply from the gateway is not proof:
-the gateway reports sent when it has typed the line into the box terminal,
-even if that terminal is no longer a mailbox.
+watcher prints it. Without the guard, a `{"sent": ...}` reply from the
+gateway is not proof: the gateway reports sent when it has typed the line
+into the box terminal, even if that terminal is no longer a mailbox.
 
 ## Waking and polling
 
@@ -134,7 +144,11 @@ even if that terminal is no longer a mailbox.
 Polling uses `since=<newest ts seen>`. Timestamps have one-second resolution
 and `since` is strictly newer, so lines written in the same second as the
 cursor can be missed. `link.mjs` asks from one second earlier and skips the
-lines it already printed at the cursor second.
+lines it already printed at the cursor second. A read returns only the
+newest 200 matches; when a read is full, `link.mjs` prints `MBX_GAP` and
+exits 1 instead of treating it as complete: read the missing range from the
+box log on the host. A first read that fails sets no cursor. The onboarding
+prompt gives the agent the same rules.
 
 ## Message protocol
 
@@ -144,6 +158,13 @@ Put this in the onboarding prompt and follow it on the lead side too.
   newlines). Longer content: split into numbered lines `[1/3] ...`,
   `[2/3] ...`, sent in order; the reader joins them. `link.mjs send` splits
   automatically.
+- Every lead message starts with an id, `#3f9a1c2e ...` (`link.mjs send`
+  adds it). The agent starts its answers with the same id and never acts
+  twice on one id.
+- When `link.mjs send` prints `MBX_UNCONFIRMED` (exit 2), the line may or
+  may not have arrived. Do not resend blindly: check the inbox log or ask the
+  agent about the id, then resend with `send --id <id>` so a line that did
+  arrive is not acted on twice.
 - The agent answers each instruction with:
   - `ack <short summary>` when it picks it up,
   - `done <result>` when finished,
@@ -165,7 +186,10 @@ Three channels, used in this order:
 1. **URL board.** A raw text file at a stable public address (a secret gist's
    raw link works) that holds only the current gateway URL, one line, never a
    token. The lead rewrites it whenever the URL changes. The agent re-reads it
-   whenever a call fails. Read it back after every edit.
+   whenever a call fails. Read it back after every edit. The board is not
+   authenticated, so it is only a hint: the agent sends its token to a new
+   URL only after the human confirms that URL to it in their private chat,
+   and the lead adds the new origin to `MBX_APPROVED_ORIGINS` itself.
 2. **Recovery mail.** If the mailbox has failed for 15 minutes or answers
    401, the agent sends a short mail with a fixed subject to an address the
    lead watches. The lead fixes the gateway, updates the board and answers in
@@ -181,13 +205,18 @@ Restart and outage steps: [references/restart.md](references/restart.md).
   language, short documents in formats it handles.
 - **Keep** what needs the lead's machines, long or heavy work, and anything
   that must be watched more often than the agent's wake interval.
-- **Ask the human first, every time,** before the agent: places a call,
-  pays or orders, makes a booking that commits the human, or messages or
-  calls a person the human knows. Write the granted scope into the
-  instruction when the human gave it in advance. Keep calls few, out of
-  courtesy to the people called.
-- **After a call,** ask for the full transcript, both sides, word for word,
-  and give the human the transcript with a translation into their language.
+- **Authorization stays with the human.** The mailbox cannot prove who
+  wrote a line, so a lead instruction, even one quoting the human, is never
+  approval. Before the agent places a call, pays or orders, makes a booking
+  that commits the human, messages or calls a person the human knows, or
+  signs in to or reads the human's private accounts, the human confirms it
+  to the agent directly in their private chat, or has granted that kind of
+  task there in advance. Keep calls few, out of courtesy to the people
+  called.
+- **After a call,** the mailbox gets a one-line result with no personal
+  details. The full transcript, both sides, word for word, with a
+  translation, goes from the agent to the human in that private chat or
+  another private channel the human named there, never through the mailbox.
 - **Verify results at the source** (the site, the calendar, the booking page)
   before reporting them done.
 - **Never put secrets or personal data in the mailbox:** no tokens,
@@ -205,10 +234,11 @@ tunnel:
 1. `/healthz` 200 locally and on the public URL.
 2. Both box terminals run the mailbox program, not a shell.
 3. One round trip proven, as above.
-4. If the URL changed: update the lead's config, the gateway's public-origin
-   setting and the URL board, and tell the agent in one mailbox line.
-5. Anything sent while the boxes were down is lost: find it in the terminal
-   screens or the lead's send history and resend it.
+4. If the URL changed: update the lead's config and `MBX_APPROVED_ORIGINS`,
+   the gateway's public-origin setting and the URL board, and have the human
+   confirm the new URL to the agent in their private chat.
+5. Sends refused while a box was down printed `MBX_UNCONFIRMED`: confirm
+   with the agent which ids arrived, then resend the rest with `--id`.
 
 Why and how: [references/restart.md](references/restart.md).
 
@@ -217,6 +247,7 @@ Why and how: [references/restart.md](references/restart.md).
 | File | What it holds |
 |---|---|
 | [scripts/link.mjs](scripts/link.mjs) | Lead-side client: `health`, `whoami`, `send`, `poll`, `watch` |
+| [scripts/box-guard.sh](scripts/box-guard.sh) | The gateway's `MBX_HC`: delivers only to a live mailbox box, succeeds only once the line is logged |
 | [references/onboarding-prompt.md](references/onboarding-prompt.md) | The prompt to paste into the external agent |
 | [references/restart.md](references/restart.md) | Restart-safe box terminals, the silent-loss incident, outage steps |
 | [references/agent-notes.md](references/agent-notes.md) | Per-agent notes: one filled example, templates for new agents |
