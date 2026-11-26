@@ -123,6 +123,7 @@ These parts are ours and run around the Dori loop.
 - Final 2026-11-16 sync: upstream through `49fba4d`, including token-path security and completed-during-startup handling. All reviewed commits are accounted for in [SYNC-1116.md](SYNC-1116.md).
 - 2026-11-17 and 2026-11-20 syncs: Dori adopt, empty-flag and Slack bot-token fixes, the Doriterm install, upstream's gateway surface and its revert, and the test-hygiene ratchet rebuilt in the fork's own layout. See [SYNC-1117.md](SYNC-1117.md) and [SYNC-1120.md](SYNC-1120.md).
 - 2026-11-24 sync: upstream through `395149b` (Bun 1.4.5 and dependency updates), recorded in [SYNC-1124.md](SYNC-1124.md).
+- 2026-11-26 sync: upstream through `3e29270` (input checks on start, up, ready and backlog, hc delivery fixes, stricter review and merge gates, inbox drop, stuck-lane alerts, dynamic heavy slots, and the opt-in omo-host lane runtime), recorded in [SYNC-1126.md](SYNC-1126.md).
 - Since 2026-11-05 we read new upstream commits every evening and compare the useful ones with the tables above.
 - We have not contributed anything to the upstream repository yet.
 

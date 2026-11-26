@@ -1,7 +1,7 @@
 import { homedir } from "node:os";
 import { join } from "node:path";
 
-import type { RuntimeKind } from "../../../../src/runtime/types.ts";
+import type { RuntimeKind, TerminalKind } from "../../../../src/runtime/types.ts";
 import type { SupervisionOptions } from "./supervision-observe.ts";
 import type { CommitIdentity } from "./verify-pr-check.ts";
 
@@ -23,7 +23,11 @@ export type GuardThresholds = {
 
 export type DoriConfig = {
   /** Where new sessions open; absent = detected (see run.ts runtimeChoice). */
-  readonly runtime?: RuntimeKind;
+  readonly runtime?: TerminalKind;
+  /** Where new lanes open; absent = the same runtime as `runtime`. `omo-host` runs each lane inside omo's shared host. */
+  readonly laneRuntime?: RuntimeKind;
+  /** Where the lead session lives; absent = the same runtime as `runtime`. Read by lanes to name how they reach the lead. */
+  readonly leadRuntime?: RuntimeKind;
   readonly stateDir: string;
   readonly laneWorkspace: string;
   readonly workspaces: readonly string[];
@@ -40,7 +44,10 @@ export type DoriConfig = {
   readonly nudgeAfterMin: number;
   readonly postAfterMin: number;
   readonly closeAfterMin: number;
-  readonly heavySlots: number;
+  /** `dori heavy` admits by free memory and load between these two; the old `heavySlots` key is read as the ceiling. */
+  readonly heavyMinSlots: number;
+  readonly heavyMaxSlots: number;
+  readonly heavyJobMemGb: number;
   readonly heavyMaxLoad: number;
   readonly deadPanePatterns: readonly string[];
   readonly guard: GuardThresholds;
@@ -66,7 +73,9 @@ export const defaultConfig = (home = homedir()): DoriConfig => ({
   nudgeAfterMin: 15,
   postAfterMin: 20,
   closeAfterMin: 5,
-  heavySlots: 1,
+  heavyMinSlots: 1,
+  heavyMaxSlots: 4,
+  heavyJobMemGb: 4,
   heavyMaxLoad: 80,
   deadPanePatterns: ["has stopped", "no suitable jobs"],
   guard: { loadAlert: 150, loadOk: 80, memFreeMinPct: 20, diskFreeMinGb: 50, panesMax: 20 },
@@ -108,11 +117,12 @@ const repoIdentities = (value: unknown): Record<string, CommitIdentity> =>
 
 export class ConfigError extends Error {}
 
-const RUNTIMES: Readonly<Record<RuntimeKind, true>> = { herdr: true, hc: true };
-const checkRuntime = (value: unknown): void => {
-  if (value !== undefined && !(typeof value === "string" && Object.hasOwn(RUNTIMES, value)))
+const RUNTIMES: Readonly<Record<TerminalKind, true>> = { herdr: true, hc: true };
+const LANE_RUNTIMES: Readonly<Record<RuntimeKind, true>> = { ...RUNTIMES, "omo-host": true };
+const checkRuntime = (name: string, value: unknown, allowed: Readonly<Record<string, true>>): void => {
+  if (value !== undefined && !(typeof value === "string" && Object.hasOwn(allowed, value)))
     throw new ConfigError(
-      `invalid runtime: expected ${Object.keys(RUNTIMES)
+      `invalid ${name}: expected ${Object.keys(allowed)
         .map((k) => JSON.stringify(k))
         .join(" or ")}, got ${JSON.stringify(value)}`,
     );
@@ -172,7 +182,9 @@ export const loadConfig = async (path = configPath(), home = homedir()): Promise
   const base = defaultConfig(home);
   const file = Bun.file(path);
   const raw = (await file.exists()) ? ((await file.json()) as Partial<DoriConfig>) : {};
-  checkRuntime(raw.runtime);
+  checkRuntime("runtime", raw.runtime, RUNTIMES);
+  checkRuntime("laneRuntime", raw.laneRuntime, LANE_RUNTIMES);
+  checkRuntime("leadRuntime", raw.leadRuntime, LANE_RUNTIMES);
   checkSupervision(raw.supervision);
   const merged: DoriConfig = {
     ...base,
@@ -189,6 +201,7 @@ export const loadConfig = async (path = configPath(), home = homedir()): Promise
       raw.startupWaitSeconds >= 0
         ? raw.startupWaitSeconds
         : base.startupWaitSeconds,
+    heavyMaxSlots: raw.heavyMaxSlots ?? (raw as { heavySlots?: number }).heavySlots ?? base.heavyMaxSlots,
     supervision: {
       ...base.supervision,
       ...raw.supervision,
@@ -203,6 +216,13 @@ export const loadConfig = async (path = configPath(), home = homedir()): Promise
     if (value != null && (typeof value !== "number" || !Number.isFinite(value) || value < 0))
       throw new ConfigError(`invalid supervision ${name}: expected a nonnegative number or null`);
   }
+  for (const name of ["heavyMinSlots", "heavyMaxSlots", "heavyJobMemGb", "heavyMaxLoad"] as const) {
+    const value = merged[name];
+    if (typeof value !== "number" || !Number.isFinite(value) || value < (name === "heavyMinSlots" ? 0 : 1))
+      throw new ConfigError(`invalid ${name}: expected a number of at least ${name === "heavyMinSlots" ? 0 : 1}`);
+  }
+  if (merged.heavyMinSlots > merged.heavyMaxSlots)
+    throw new ConfigError("invalid heavyMinSlots: above heavyMaxSlots (or the old heavySlots)");
   for (const [key, budget] of Object.entries(merged.supervision.lanes ?? {})) {
     for (const [name, value] of Object.entries(budget)) {
       if (value != null && (typeof value !== "number" || !Number.isFinite(value) || value < 0))
